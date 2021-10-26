@@ -1,0 +1,9 @@
+.homeJumbo {
+    overflow-y: auto;
+    height: 600px;
+}
+
+.PObox {
+    overflow-y: auto;
+    height: 400px;
+}
