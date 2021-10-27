@@ -4,19 +4,29 @@ import API from "../../utils/API";
 
 class Admin extends Component {
 
-  state = {
-    
-  }
+    state = {
 
-  render() {
-    return (
-      <div className="container" align="center">
+    }
 
-        Admin
+    componentDidMount() {
+        API.getWarehouses()
+            .then(res => {
+                console.log(res.data)
+            })
+            .catch(err => {
+                console.log(err);
+            });
+    }
 
-      </div>
-    );
-  }
+    render() {
+        return (
+            <div className="container" align="center">
+
+                Admin
+
+            </div>
+        );
+    }
 }
 
 
