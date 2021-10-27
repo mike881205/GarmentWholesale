@@ -132,7 +132,7 @@ router.post("/api/addStock", (req, res) => {
     name: req.body.name,
     qty: req.body.qty,
     WarehouseId: req.body.WarehouseId,
-    SizeId: req.body.SizeId,
+    SizeId: req.body.SizeId
   }).then(info => {
     console.log("Stock Added")
     res.json(info);

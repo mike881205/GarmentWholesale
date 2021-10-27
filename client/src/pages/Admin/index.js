@@ -5,7 +5,19 @@ import API from "../../utils/API";
 class Admin extends Component {
 
     state = {
-
+        brandChildren: [],
+        styleChildren: [],
+        colorChildren: [],
+        sizeChildren: [],
+        brands: [],
+        styles: [],
+        colors: [],
+        sizes: [],
+        addBrand: false,
+        addStyle: false,
+        addColor: false,
+        addSize: false,
+        addStock: false
     }
 
     componentDidMount() {
@@ -18,14 +30,268 @@ class Admin extends Component {
             });
     }
 
+    addBrand = event => {
+        event.preventDefault();
+        let brandName = this.state.brandName
+        API.addBrand(brandName)
+            .then(res => {
+                console.log(res.data)
+            })
+            .catch(err => {
+                console.log(err);
+            });
+    }
+
+    addStyle = event => {
+        event.preventDefault();
+        let styleInfo = {
+            styleNum: this.state.styleObj.styleNum,
+            styleName: this.state.styleObj.styleName,
+            img: this.state.styleObj.img,
+            type: this.state.styleObj.type,
+            description: this.state.styleObj.description,
+            BrandId: this.state.styleObj.BrandId
+        }
+        API.addStyle(styleInfo)
+            .then(res => {
+                console.log(res.data)
+            })
+            .catch(err => {
+                console.log(err);
+            });
+    }
+
+    addColor = event => {
+        event.preventDefault();
+        let colorInfo = {
+            color: this.state.colorObj.color,
+            hexCode: this.state.colorObj.hexCode,
+            BrandId: this.state.colorObj.BrandId,
+            StyleId: this.state.colorObj.StyleId
+        }
+        API.addColor(colorInfo)
+            .then(res => {
+                console.log(res.data)
+            })
+            .catch(err => {
+                console.log(err);
+            });
+    }
+
+    addSize = event => {
+        event.preventDefault();
+        let sizeInfo = {
+            size: this.state.sizeObj.size,
+            cost: this.state.sizeObj.cost,
+            BrandId: this.state.sizeObj.BrandId,
+            StyleId: this.state.sizeObj.StyleId,
+            ColorId: this.state.sizeObj.ColorId
+        }
+        API.addSize(sizeInfo)
+            .then(res => {
+                console.log(res.data)
+            })
+            .catch(err => {
+                console.log(err);
+            });
+    }
+
+    addStock = event => {
+        event.preventDefault();
+        let stockInfo = {
+            name: this.state.stockObj.name,
+            qty: this.state.stockObj.qty,
+            WarehouseId: this.state.stockObj.WarehouseId,
+            SizeId: this.state.stockObj.SizeId
+        }
+        API.addStock(stockInfo)
+            .then(res => {
+                console.log(res.data)
+            })
+            .catch(err => {
+                console.log(err);
+            });
+    }
+
     render() {
-        return (
-            <div className="container" align="center">
 
-                Admin
+        switch (true) {
+            case this.state.addBrand:
+                return (
+                    <div className="container jumbotron" align="center">
+                        <div className="row">
+                            <div className="col-sm">
+                            <h1>Add Brand</h1>
+                            </div>
+                        </div>
 
-            </div>
-        );
+                        <div className="row">
+                            <div className="col-sm">
+                                <FormBtn
+                                    text={'Back'}
+                                    classes={"btn-primary"}
+                                    onClick={() => this.setState({addBrand: false})}
+                                />
+                            </div>
+                        </div>
+
+                        <div>
+
+                        </div>
+
+                    </div>
+                );
+            case this.state.addStyle:
+                return (
+                    <div className="container jumbotron" align="center">
+                        <div className="row">
+                            <div className="col-sm">
+                            <h1>Add Style</h1>
+                            </div>
+                        </div>
+
+                        <div className="row">
+                            <div className="col-sm">
+                                <FormBtn
+                                    text={'Back'}
+                                    classes={"btn-primary"}
+                                    onClick={() => this.setState({addStyle: false})}
+                                />
+                            </div>
+                        </div>
+
+                        <div>
+
+                        </div>
+
+                    </div>
+                );
+            case this.state.addColor:
+                return (
+                    <div className="container jumbotron" align="center">
+                        <div className="row">
+                            <div className="col-sm">
+                            <h1>Add color</h1>
+                            </div>
+                        </div>
+
+                        <div className="row">
+                            <div className="col-sm">
+                                <FormBtn
+                                    text={'Back'}
+                                    classes={"btn-primary"}
+                                    onClick={() => this.setState({addColor: false})}
+                                />
+                            </div>
+                        </div>
+
+                        <div>
+
+                        </div>
+
+                    </div>
+                );
+            case this.state.addSize:
+                return (
+                    <div className="container jumbotron" align="center">
+                        <div className="row">
+                            <div className="col-sm">
+                            <h1>Add Size</h1>
+                            </div>
+                        </div>
+
+                        <div className="row">
+                            <div className="col-sm">
+                                <FormBtn
+                                    text={'Back'}
+                                    classes={"btn-primary"}
+                                    onClick={() => this.setState({addSize: false})}
+                                />
+                            </div>
+                        </div>
+
+                        <div>
+
+                        </div>
+
+                    </div>
+                );
+            case this.state.addStock:
+                return (
+                    <div className="container jumbotron" align="center">
+                        <div className="row">
+                            <div className="col-sm">
+                            <h1>Add Stock</h1>
+                            </div>
+                        </div>
+
+                        <div className="row">
+                            <div className="col-sm">
+                                <FormBtn
+                                    text={'Back'}
+                                    classes={"btn-primary"}
+                                    onClick={() => this.setState({addStock: false})}
+                                />
+                            </div>
+                        </div>
+
+                        <div>
+
+                        </div>
+
+                    </div>
+                );
+            default:
+                return (
+                    <div className="container jumbotron" align="center">
+
+
+                        <div className="row">
+                            <div className="col-sm">
+                                <h1>Admin</h1>
+                            </div>
+                        </div>
+
+                        <div className="row">
+                            <div className="col-sm">
+                                <FormBtn
+                                    text={'Add Brand'}
+                                    classes={"btn-primary"}
+                                    onClick={() => this.setState({addBrand: true})}
+                                />
+                            </div>
+                            <div className="col-sm">
+                                <FormBtn
+                                    text={'Add Style'}
+                                    classes={"btn-primary"}
+                                    onClick={() => this.setState({addStyle: true})}
+                                />
+                            </div>
+                            <div className="col-sm">
+                                <FormBtn
+                                    text={'Add Color'}
+                                    classes={"btn-primary"}
+                                    onClick={() => this.setState({addColor: true})}
+                                />
+                            </div>
+                            <div className="col-sm">
+                                <FormBtn
+                                    text={'Add Size'}
+                                    classes={"btn-primary"}
+                                    onClick={() => this.setState({addSize: true})}
+                                />
+                            </div>
+                            <div className="col-sm">
+                                <FormBtn
+                                    text={'Add Stock'}
+                                    classes={"btn-primary"}
+                                    onClick={() => this.setState({addStock: true})}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                );
+        }
     }
 }
 
