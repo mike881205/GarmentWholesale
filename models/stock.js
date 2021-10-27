@@ -20,8 +20,10 @@ module.exports = function (sequelize, DataTypes) {
                 allowNull: false
             }
         });
-        Stock.hasOne(models.Size, {
-            onDelete: "cascade"
+        Stock.belongsTo(models.Size, {
+            foreignKey: {
+                allowNull: false
+            }
         });
     };
 
