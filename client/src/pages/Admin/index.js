@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import AdminJumbo from "../../components/Admin/Jumbotron";
+import AdminJumbo from "../../components/Admin/AdminJumbo";
 import { FormGroup, Input, Label, Small, FormBtn } from "../../components/Form";
 import API from "../../utils/API";
 
@@ -126,6 +126,7 @@ class Admin extends Component {
                             <h1>Admin</h1>
                         </div>
                     </div>
+                    <hr></hr>
                     <div className="row">
                         <div className="col-sm">
                             <FormBtn
@@ -173,41 +174,13 @@ class Admin extends Component {
         else {
             return (
                 <AdminJumbo
-                    onClick={
-                        () => {
-                            let key;
-                            switch (true) {
-                                case this.state.addBrand:
-                                    key = 'addBrand';
-                                    break;
-                                case this.state.addStyle:
-                                    key = 'addStyle'
-                                    break;
-                                case this.state.addColor:
-                                    key = 'addColor'
-                                    break;
-                                default:
-                                    key = 'addSize'
-                                    break;
-                            }
-                            this.setState({ [key]: false })
-                        }
-                    }
-                    text={
-                        this.state.addBrand ?
-                            'Add Brand'
-                            :
-                            this.state.addStyle ?
-                                'Add Style'
-                                :
-                                this.state.addColor ?
-                                    'Add Color'
-                                    :
-                                    this.state.addSize ?
-                                        'Add Size'
-                                        :
-                                        ''
-                    }
+                    backOnClick={obj => this.setState(obj)}
+                    addType={{
+                        addBrand: this.state.addBrand,
+                        addStyle: this.state.addStyle,
+                        addColor: this.state.addColor,
+                        addSize: this.state.addSize
+                    }}
                 />
             );
         }
