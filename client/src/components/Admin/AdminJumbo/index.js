@@ -5,6 +5,7 @@ import API from "../../../utils/API";
 class AdminJumbo extends Component {
 
     state = {
+        frmChldCnt: 0,
         formChildren: [],
         headerTxt: '',
         backOnClick: '',
@@ -24,19 +25,21 @@ class AdminJumbo extends Component {
 
     addChild = event => {
         event.preventDefault();
-        console.log(event.target.parentElement.parentElement)
         let formChildren = this.state.formChildren
+        let frmChldCnt = this.state.frmChldCnt
         let inputChildren = []
         let stateName;
         let stateValue;
         let placeholder;
 
+        frmChldCnt++
+
         stateName = 'brandName'
-        stateValue = this.state.brands[1]
+        stateValue = this.state.brands[frmChldCnt]
         placeholder = 'Brand Name'
 
         inputChildren.push(
-            <div className='col-sm' key={2}>
+            <div className='col-sm' key={inputChildren.length + 'A'}>
                 <FormGroup>
                     <Input
                         // style={{ 'width': '25%' }}
@@ -48,25 +51,39 @@ class AdminJumbo extends Component {
                     />
                 </FormGroup>
             </div>,
-            <div className="col-sm" key={3}>
+            <div className="col-sm" key={inputChildren.length + 'B'}>
                 <FormBtn
+                    id={frmChldCnt}
                     text={'X'}
-                    // style={{ 'width': '25%' }}
+                    style={{ 'width': '10%' }}
                     classes={"btn-danger"}
                     disabled={false}
-                // onClick={this.addChild}
+                    onClick={this.removeChild}
                 />
             </div>
         )
 
         formChildren.push(
-            <div className='row' key={2} id={0}>
+            <div className='row' key={'key' + frmChldCnt} id={frmChldCnt}>
                 {inputChildren}
             </div>
         )
 
-        this.setState({formChildren: formChildren})
+        console.log(formChildren)
+
+        this.setState({ formChildren: formChildren, frmChldCnt: frmChldCnt })
     }
+
+    removeChild = event => {
+        event.preventDefault();
+        let formChildren = this.state.formChildren;
+        for (let i = 0; i < formChildren.length; i++) {
+            if (parseInt(event.target.id) === formChildren[i].props.id) {
+                formChildren.splice(i, 1);
+            };
+        };
+        this.setState({ formChildren: formChildren });
+    };
 
     componentDidMount() {
         const { addBrand, addStyle, addColor, addSize } = this.props.addType
