@@ -7,13 +7,18 @@ module.exports = function(sequelize, DataTypes) {
         cost: {
             type: DataTypes.DECIMAL(10,2),            
             allowNull: false
+        },
+        createdAt: {
+            type: DataTypes.DATE,
+            defaultValue: sequelize.literal('CURRENT_TIMESTAMP')
+        },
+        updatedAt: {
+            type: DataTypes.DATE,
+            defaultValue: sequelize.literal('CURRENT_TIMESTAMP')
         }
     });
 
     Size.associate = models => {
-        Size.hasMany(models.Stock, {
-            onDelete: "cascade"
-        });
         Size.belongsTo(models.Brand, {
             foreignKey: {
                 allowNull: false

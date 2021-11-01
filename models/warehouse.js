@@ -1,7 +1,15 @@
 module.exports = function (sequelize, DataTypes) {
     var Warehouse = sequelize.define("Warehouse", {
-        location: {
+        city: {
             type: DataTypes.STRING,
+            allowNull: false
+        },
+        state: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        zip: {
+            type: DataTypes.INTEGER,
             allowNull: false
         },
         createdAt: {
@@ -15,7 +23,7 @@ module.exports = function (sequelize, DataTypes) {
     });
 
     Warehouse.associate = models => {
-        Warehouse.hasMany(models.Stock, {
+        Warehouse.hasMany(models.Product, {
             onDelete: "cascade"
         });
     };

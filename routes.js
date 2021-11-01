@@ -47,92 +47,15 @@ router.get("/api/user", (req, res) => {
   }
 });
 
-router.post("/api/addBrand", (req, res) => {
+router.post("/api/addProduct", (req, res) => {
   //****
   //Do validation here before attempting to register user, such as checking for password length, capital letters, special characters, etc.
   //****
-  console.log("Adding brand...");
-  db.Brand.create({
-    brandName: req.body.brandName
-  }).then(info => {
-    console.log("Brand Added")
-    res.json(info);
-  }).catch(err => {
-    console.log(err);
-    res.json(err);
-  });
-});
-
-router.post("/api/addStyle", (req, res) => {
-  //****
-  //Do validation here before attempting to register user, such as checking for password length, capital letters, special characters, etc.
-  //****
-  console.log("Adding style...");
-  db.Style.create({
-    styleNum: req.body.styleNum,
-    styleName: req.body.styleName,
-    img: req.body.img,
-    type: req.body.type,
-    description: req.body.description,
-    BrandId: req.body.BrandId
-  }).then(info => {
-    console.log("Style Added")
-    res.json(info);
-  }).catch(err => {
-    console.log(err);
-    res.json(err);
-  });
-});
-
-router.post("/api/addColor", (req, res) => {
-  //****
-  //Do validation here before attempting to register user, such as checking for password length, capital letters, special characters, etc.
-  //****
-  console.log("Adding color...");
-  db.Color.create({
-    color: req.body.color,
-    hexCode: req.body.hexCode,
-    BrandId: req.body.BrandId,
-    StyleId: req.body.StyleId
-  }).then(info => {
-    console.log("Color Added")
-    res.json(info);
-  }).catch(err => {
-    console.log(err);
-    res.json(err);
-  });
-});
-
-router.post("/api/addSize", (req, res) => {
-  //****
-  //Do validation here before attempting to register user, such as checking for password length, capital letters, special characters, etc.
-  //****
-  console.log("Adding size...");
-  db.Size.create({
-    size: req.body.size,
-    cost: req.body.cost,
-    BrandId: req.body.BrandId,
-    StyleId: req.body.StyleId,
-    ColorId: req.body.ColorId
-  }).then(info => {
-    console.log("Color Added")
-    res.json(info);
-  }).catch(err => {
-    console.log(err);
-    res.json(err);
-  });
-});
-
-router.post("/api/addStock", (req, res) => {
-  //****
-  //Do validation here before attempting to register user, such as checking for password length, capital letters, special characters, etc.
-  //****
-  console.log("Adding stock...");
+  console.log("Adding Product...");
   db.Stock.create({
-    name: req.body.name,
+    productNum: req.body.name,
     qty: req.body.qty,
-    WarehouseId: req.body.WarehouseId,
-    SizeId: req.body.SizeId
+    WarehouseId: req.body.WarehouseIdd
   }).then(info => {
     console.log("Stock Added")
     res.json(info);

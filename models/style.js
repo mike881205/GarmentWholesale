@@ -5,20 +5,24 @@ module.exports = function(sequelize, DataTypes) {
             allowNull: false
         },
         styleName: {
-            type: DataTypes.STRING,            
+            type: DataTypes.TEXT,            
             allowNull: false
         },
-        img: {
-            type: DataTypes.STRING,            
-            allowNull: false
-        },
-        type: {
-            type: DataTypes.STRING,            
+        keyWords: {
+            type: DataTypes.TEXT,            
             allowNull: false
         },
         description: {
             type: DataTypes.TEXT,            
             allowNull: false
+        },
+        createdAt: {
+            type: DataTypes.DATE,
+            defaultValue: sequelize.literal('CURRENT_TIMESTAMP')
+        },
+        updatedAt: {
+            type: DataTypes.DATE,
+            defaultValue: sequelize.literal('CURRENT_TIMESTAMP')
         }
     });
 

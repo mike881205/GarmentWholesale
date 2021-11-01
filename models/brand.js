@@ -3,6 +3,18 @@ module.exports = function(sequelize, DataTypes) {
         brandName: {
             type: DataTypes.STRING,            
             allowNull: false
+        },
+        abrv: {
+            type: DataTypes.STRING,            
+            allowNull: false
+        },
+        createdAt: {
+            type: DataTypes.DATE,
+            defaultValue: sequelize.literal('CURRENT_TIMESTAMP')
+        },
+        updatedAt: {
+            type: DataTypes.DATE,
+            defaultValue: sequelize.literal('CURRENT_TIMESTAMP')
         }
     });
 

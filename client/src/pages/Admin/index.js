@@ -18,7 +18,7 @@ class Admin extends Component {
         addStyle: false,
         addColor: false,
         addSize: false,
-        addStock: false
+        addProduct: false
     }
 
     componentDidMount() {
@@ -31,81 +31,14 @@ class Admin extends Component {
             });
     }
 
-    addBrand = event => {
+    addProduct = event => {
         event.preventDefault();
-        let brandName = this.state.brandName
-        API.addBrand(brandName)
-            .then(res => {
-                console.log(res.data)
-            })
-            .catch(err => {
-                console.log(err);
-            });
-    }
-
-    addStyle = event => {
-        event.preventDefault();
-        let styleInfo = {
-            styleNum: this.state.styleObj.styleNum,
-            styleName: this.state.styleObj.styleName,
-            img: this.state.styleObj.img,
-            type: this.state.styleObj.type,
-            description: this.state.styleObj.description,
-            BrandId: this.state.styleObj.BrandId
+        let prodInfo = {
+            prodNum: this.state.prodObj.prodNum,
+            qty: this.state.prodObj.qty,
+            WarehouseId: this.state.prodObj.WarehouseId
         }
-        API.addStyle(styleInfo)
-            .then(res => {
-                console.log(res.data)
-            })
-            .catch(err => {
-                console.log(err);
-            });
-    }
-
-    addColor = event => {
-        event.preventDefault();
-        let colorInfo = {
-            color: this.state.colorObj.color,
-            hexCode: this.state.colorObj.hexCode,
-            BrandId: this.state.colorObj.BrandId,
-            StyleId: this.state.colorObj.StyleId
-        }
-        API.addColor(colorInfo)
-            .then(res => {
-                console.log(res.data)
-            })
-            .catch(err => {
-                console.log(err);
-            });
-    }
-
-    addSize = event => {
-        event.preventDefault();
-        let sizeInfo = {
-            size: this.state.sizeObj.size,
-            cost: this.state.sizeObj.cost,
-            BrandId: this.state.sizeObj.BrandId,
-            StyleId: this.state.sizeObj.StyleId,
-            ColorId: this.state.sizeObj.ColorId
-        }
-        API.addSize(sizeInfo)
-            .then(res => {
-                console.log(res.data)
-            })
-            .catch(err => {
-                console.log(err);
-            });
-    }
-
-    addStock = event => {
-        event.preventDefault();
-        let stockInfo = {
-            name: this.state.stockObj.name,
-            qty: this.state.stockObj.qty,
-            WarehouseId: this.state.stockObj.WarehouseId,
-            SizeId: this.state.stockObj.SizeId
-        }
-        API.addStock(stockInfo)
+        API.addProduct(prodInfo)
             .then(res => {
                 console.log(res.data)
             })
@@ -164,7 +97,7 @@ class Admin extends Component {
                                 text={'Add Stock'}
                                 classes={"btn-primary"}
                                 disabled={true}
-                                onClick={() => this.setState({ addStock: true })}
+                                onClick={() => this.setState({ addProduct: true })}
                             />
                         </div>
                     </div>

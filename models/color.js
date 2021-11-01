@@ -7,6 +7,18 @@ module.exports = function(sequelize, DataTypes) {
         hexCode: {
             type: DataTypes.STRING,            
             allowNull: false
+        },
+        img: {
+            type: DataTypes.STRING,            
+            allowNull: false
+        },
+        createdAt: {
+            type: DataTypes.DATE,
+            defaultValue: sequelize.literal('CURRENT_TIMESTAMP')
+        },
+        updatedAt: {
+            type: DataTypes.DATE,
+            defaultValue: sequelize.literal('CURRENT_TIMESTAMP')
         }
     });
 
