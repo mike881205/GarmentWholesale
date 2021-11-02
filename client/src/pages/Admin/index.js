@@ -18,27 +18,27 @@ class Admin extends Component {
         addStyle: false,
         addColor: false,
         addSize: false,
-        addProduct: false
+        addStock: false
     }
 
     componentDidMount() {
         API.getGarments()
             .then(res => {
-                console.log(res.data)
+                this.setState({brands: res.data})
             })
             .catch(err => {
                 console.log(err);
             });
     }
 
-    addProduct = event => {
+    addStock = event => {
         event.preventDefault();
         let prodInfo = {
             prodNum: this.state.prodObj.prodNum,
             qty: this.state.prodObj.qty,
             WarehouseId: this.state.prodObj.WarehouseId
         }
-        API.addProduct(prodInfo)
+        API.addStock(prodInfo)
             .then(res => {
                 console.log(res.data)
             })
@@ -49,9 +49,9 @@ class Admin extends Component {
 
     render() {
 
-        const { addBrand, addStyle, addColor, addSize } = this.state
+        const { addBrand, addStyle, addColor, addSize, addStock } = this.state
 
-        if (!addBrand && !addStyle && !addColor && !addSize) {
+        if (!addBrand && !addStyle && !addColor && !addSize && !addStock) {
             return (
                 <div className="container jumbotron" align="center">
                     <div className="row">
@@ -96,8 +96,8 @@ class Admin extends Component {
                             <FormBtn
                                 text={'Add Stock'}
                                 classes={"btn-primary"}
-                                disabled={true}
-                                onClick={() => this.setState({ addProduct: true })}
+                                disabled={false}
+                                onClick={() => this.setState({ addStock: true })}
                             />
                         </div>
                     </div>
@@ -107,12 +107,14 @@ class Admin extends Component {
         else {
             return (
                 <AdminJumbo
+                    dbInfo={this.state.brands}
                     backOnClick={obj => this.setState(obj)}
                     addType={{
                         addBrand: this.state.addBrand,
                         addStyle: this.state.addStyle,
                         addColor: this.state.addColor,
-                        addSize: this.state.addSize
+                        addSize: this.state.addSize,
+                        addStock: this.state.addStock
                     }}
                 />
             );
