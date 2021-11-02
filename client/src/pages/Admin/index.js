@@ -22,7 +22,7 @@ class Admin extends Component {
     }
 
     componentDidMount() {
-        API.getWarehouses()
+        API.getGarments()
             .then(res => {
                 console.log(res.data)
             })

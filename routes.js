@@ -65,8 +65,8 @@ router.post("/api/addProduct", (req, res) => {
   });
 });
 
-router.get("/api/getWarehouses", function (req, res) {
-  db.Warehouse.findAll({ include: { all: true, nested: true }})
+router.get("/api/getGarments", function (req, res) {
+  db.Brand.findAll({ include: { all: true, nested: true }})
     .then(dbResults => res.json(dbResults))
     .catch(err => {
       console.log(err);

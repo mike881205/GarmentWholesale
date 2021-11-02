@@ -19,7 +19,7 @@ export default {
   addProduct: stock => {
     return axios.post("/api/addProduct", stock);
   },
-  getWarehouses: () => {
-    return axios.get("/api/getWarehouses");
+  getGarments: () => {
+    return axios.get("/api/getGarments");
   }
 };
