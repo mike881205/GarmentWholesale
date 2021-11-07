@@ -2,13 +2,13 @@ import React, { Component } from "react";
 import {
   BrowserRouter as Router,
   Route,
-  Switch,
-  Redirect
+  // Switch,
+  // Redirect
 } from "react-router-dom";
 import API from "./utils/API";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import Home from "./pages/Home";
+// import Login from "./pages/Login";
+// import Register from "./pages/Register";
+// import Home from "./pages/Home";
 import "./index.css"
 import 'react-widgets/dist/css/react-widgets.css';
 import Admin from "./pages/Admin";

@@ -8,7 +8,7 @@ import { FormGroup, Input, FormBtn } from "../../Form";
 class AdminJumbo extends Component {
 
     state = {
-        frmChldCnt: 0,
+        frmChldCnt: 1,
         formChildren: [],
         headerTxt: '',
         backOnClick: '',
@@ -16,7 +16,8 @@ class AdminJumbo extends Component {
         brands: [],
         styles: [],
         colors: [],
-        sizes: []
+        sizes: [],
+        products: []
     }
 
     handleInputChange = event => {
@@ -28,43 +29,113 @@ class AdminJumbo extends Component {
 
     addChild = event => {
         event.preventDefault();
+        const { addType, products } = this.props
+        const { addBrand, addStyle, addColor, addSize } = addType
+        const { brands, styles, colors, sizes } = products
         let formChildren = this.state.formChildren
         let frmChldCnt = this.state.frmChldCnt
         let inputChildren = []
-        let stateName;
+        let headerTxt;
+        let name;
         let stateValue;
         let placeholder;
+        let stateKey;
 
         frmChldCnt++
 
-        stateName = 'brandName'
-        stateValue = this.state.brands[frmChldCnt]
-        placeholder = 'Brand Name'
+        /////////////////
 
-        inputChildren.push(
-            <div className='col-sm' key={inputChildren.length + 'A'}>
-                <FormGroup>
-                    <Input
-                        // style={{ 'width': '25%' }}
-                        name={stateName}
-                        value={stateValue}
-                        onChange={this.handleInputChange}
-                        placeholder={placeholder}
-                        type="text"
-                    />
-                </FormGroup>
-            </div>,
-            <div className="col-sm" key={inputChildren.length + 'B'}>
-                <FormBtn
-                    id={frmChldCnt}
-                    text={'X'}
-                    style={{ 'width': '10%' }}
-                    classes={"btn-danger"}
-                    disabled={false}
-                    onClick={this.removeChild}
-                />
-            </div>
-        )
+        switch (true) {
+            default:
+                stateKey = "addStock"
+                for (let i = 0; i < 5; i++) {
+                    switch (i) {
+                        case 0:
+                            name = 'brandName'
+                            stateValue = this.state.products[frmChldCnt].brandName
+                            placeholder = 'Brand Name'
+                            inputChildren.push(
+                                <div className='col-sm' key={i + 1}>
+                                    <FormGroup>
+                                        <Dropdown
+                                            options={[brands]}
+                                            // onChange={this._onSelect} 
+                                            // value={defaultOption} 
+                                            placeholder="Select a Brand"
+                                        />
+                                    </FormGroup>
+                                </div>
+                            )
+                            break;
+                        case 1:
+                            name = 'styleNumber'
+                            stateValue = this.state.products[frmChldCnt].styleNumber
+                            placeholder = 'Style Num'
+                            inputChildren.push(
+                                <div className='col-sm' key={i + 1}>
+                                    <FormGroup>
+                                        <Dropdown
+                                            options={styles}
+                                            // onChange={this._onSelect} 
+                                            // value={defaultOption} 
+                                            placeholder="Select a Style"
+                                        />
+                                    </FormGroup>
+                                </div>
+                            )
+                            break;
+                        case 2:
+                            name = 'color'
+                            stateValue = this.state.products[frmChldCnt].color
+                            placeholder = 'Color'
+                            inputChildren.push(
+                                <div className='col-sm' key={i + 1}>
+                                    <FormGroup>
+                                        <Dropdown
+                                            options={colors}
+                                            // onChange={this._onSelect} 
+                                            // value={defaultOption} 
+                                            placeholder="Select a Color"
+                                        />
+                                    </FormGroup>
+                                </div>
+                            )
+                            break;
+                        case 3:
+                            name = 'size'
+                            stateValue = this.state.products[frmChldCnt].size
+                            placeholder = 'Size'
+                            inputChildren.push(
+                                <div className='col-sm' key={i + 1}>
+                                    <FormGroup>
+                                        <Dropdown
+                                            options={sizes}
+                                            // onChange={this._onSelect} 
+                                            // value={defaultOption} 
+                                            placeholder="Select a Size"
+                                        />
+                                    </FormGroup>
+                                </div>
+                            )
+                            break;
+                        default:
+                            inputChildren.push(
+                                <div className="col-sm" key={i + 1} >
+                                    <FormBtn
+                                        id={frmChldCnt}
+                                        text={'X'}
+                                        style={{ 'width': '10%' }}
+                                        classes={"btn-danger"}
+                                        disabled={false}
+                                        onClick={this.removeChild}
+                                    />
+                                </div>
+                            )
+                            break;
+                    }
+                }
+                break;
+        }
 
         formChildren.push(
             <div className='row' key={'key' + frmChldCnt} id={frmChldCnt}>
@@ -72,9 +143,15 @@ class AdminJumbo extends Component {
             </div>
         )
 
+        ///////////
+
         console.log(formChildren)
 
         this.setState({ formChildren: formChildren, frmChldCnt: frmChldCnt })
+        this.setState({
+            formChildren: formChildren,
+            frmChldCnt: frmChldCnt
+        })
     }
 
     removeChild = event => {
@@ -88,311 +165,337 @@ class AdminJumbo extends Component {
         this.setState({ formChildren: formChildren });
     };
 
+    dropdownChange = event => {
+        const { label, value } = event;
+        const { index, name } = value
+        let product = this.state.products[index]
+        console.log(product, name, label)
+        this.setState({
+            [product[name]]: label
+        });
+    }
+
     componentDidMount() {
-        const { addType, dbInfo } = this.props
+        const { addType, products } = this.props
         const { addBrand, addStyle, addColor, addSize, addStock } = addType
-        console.log(this.props.dbInfo[0].brandName)
+        const { brands, styles, colors, sizes } = products
         let headerTxt;
-        let stateName;
+        let name;
         let stateValue;
         let placeholder;
         let stateKey;
         let formChildren = []
         let inputChildren = []
-
+        let frmChldCnt = this.state.frmChldCnt
 
         switch (true) {
-            case addBrand:
-                headerTxt = 'Add Brand'
-                stateKey = 'addBrand'
-                stateName = 'brandName'
-                stateValue = this.state.brands[0]
-                placeholder = 'Brand Name'
-                for (let i = 0; i < 2; i++) {
-                    switch (i) {
-                        case 0:
-                            inputChildren.push(
-                                <div className='col-sm' key={i + 1}>
-                                    <FormGroup>
-                                        <Input
-                                            // style={{ 'width': '25%' }}
-                                            name={stateName}
-                                            value={stateValue}
-                                            onChange={this.handleInputChange}
-                                            placeholder={placeholder}
-                                            type="text"
-                                        />
-                                    </FormGroup>
-                                </div>
-                            )
-                            break;
-                        default:
-                            inputChildren.push(
-                                <div className="col-sm" key={i + 1} id={i}>
-                                    <FormBtn
-                                        // style={{ 'width': '25%' }}
-                                        text={'Add Another Brand'}
-                                        classes={"btn-info"}
-                                        disabled={false}
-                                        onClick={this.addChild}
-                                    />
-                                </div>
-                            )
-                            break;
-                    }
-                }
-                break;
-            case addStyle:
-                headerTxt = 'Add Style'
-                stateKey = 'addStyle'
-                for (let i = 0; i < 3; i++) {
-                    switch (i) {
-                        case 0:
-                            stateName = 'brandName'
-                            stateValue = this.state.brands[0]
-                            placeholder = 'Brand Name'
-                            inputChildren.push(
-                                <div className='col-sm' key={i + 1}>
-                                    <FormGroup>
-                                        <Input
-                                            // style={{ 'width': '25%' }}
-                                            name={stateName}
-                                            value={stateValue}
-                                            onChange={this.handleInputChange}
-                                            placeholder={placeholder}
-                                            type="text"
-                                        />
-                                    </FormGroup>
-                                </div>
-                            )
-                            break;
-                        case 1:
-                            stateName = 'styleNumber'
-                            stateValue = this.state.styles[0]
-                            placeholder = 'Style Num'
-                            inputChildren.push(
-                                <div className='col-sm' key={i + 1}>
-                                    <FormGroup>
-                                        <Input
-                                            // style={{ 'width': '25%' }}
-                                            name={stateName}
-                                            value={stateValue}
-                                            onChange={this.handleInputChange}
-                                            placeholder={placeholder}
-                                            type="text"
-                                        />
-                                    </FormGroup>
-                                </div>
-                            )
-                            break;
-                        default:
-                            inputChildren.push(
-                                <div className="col-sm" key={i + 1}>
-                                    <FormBtn
-                                        // style={{ 'width': '25%' }}
-                                        text={'Add Another Style'}
-                                        classes={"btn-info"}
-                                        disabled={false}
-                                        onClick={this.addChild}
-                                    />
-                                </div>
-                            )
-                            break;
-                    }
-                }
-                break;
-            case addColor:
-                headerTxt = 'Add Color'
-                stateKey = 'addColor'
-                for (let i = 0; i < 4; i++) {
-                    switch (i) {
-                        case 0:
-                            stateName = 'brandName'
-                            stateValue = this.state.brands[0]
-                            placeholder = 'Brand Name'
-                            inputChildren.push(
-                                <div className='col-sm' key={i + 1}>
-                                    <FormGroup>
-                                        <Input
-                                            // style={{ 'width': '25%' }}
-                                            name={stateName}
-                                            value={stateValue}
-                                            onChange={this.handleInputChange}
-                                            placeholder={placeholder}
-                                            type="text"
-                                        />
-                                    </FormGroup>
-                                </div>
-                            )
-                            break;
-                        case 1:
-                            stateName = 'styleNumber'
-                            stateValue = this.state.styles[0]
-                            placeholder = 'Style Num'
-                            inputChildren.push(
-                                <div className='col-sm' key={i + 1}>
-                                    <FormGroup>
-                                        <Input
-                                            // style={{ 'width': '25%' }}
-                                            name={stateName}
-                                            value={stateValue}
-                                            onChange={this.handleInputChange}
-                                            placeholder={placeholder}
-                                            type="text"
-                                        />
-                                    </FormGroup>
-                                </div>
-                            )
-                            break;
-                        case 2:
-                            stateName = 'color'
-                            stateValue = this.state.colors[0]
-                            placeholder = 'Color'
-                            inputChildren.push(
-                                <div className='col-sm' key={i + 1}>
-                                    <FormGroup>
-                                        <Input
-                                            // style={{ 'width': '25%' }}
-                                            name={stateName}
-                                            value={stateValue}
-                                            onChange={this.handleInputChange}
-                                            placeholder={placeholder}
-                                            type="text"
-                                        />
-                                    </FormGroup>
-                                </div>
-                            )
-                            break;
-                        default:
-                            inputChildren.push(
-                                <div className="col-sm" key={i + 1}>
-                                    <FormBtn
-                                        // style={{ 'width': '25%' }}
-                                        text={'Add Another Color'}
-                                        classes={"btn-info"}
-                                        disabled={false}
-                                        onClick={this.addChild}
-                                    />
-                                </div>
-                            )
-                            break;
-                    }
-                }
-                break;
-            // =============
-            case addSize:
-                headerTxt = 'Add Size'
-                stateKey = 'addSize'
-                for (let i = 0; i < 5; i++) {
-                    switch (i) {
-                        case 0:
-                            stateName = 'brandName'
-                            stateValue = this.state.brands[0]
-                            placeholder = 'Brand Name'
-                            inputChildren.push(
-                                <div className='col-sm' key={i + 1}>
-                                    <FormGroup>
-                                        <Input
-                                            // style={{ 'width': '25%' }}
-                                            name={stateName}
-                                            value={stateValue}
-                                            onChange={this.handleInputChange}
-                                            placeholder={placeholder}
-                                            type="text"
-                                        />
-                                    </FormGroup>
-                                </div>
-                            )
-                            break;
-                        case 1:
-                            stateName = 'styleNumber'
-                            stateValue = this.state.styles[0]
-                            placeholder = 'Style Num'
-                            inputChildren.push(
-                                <div className='col-sm' key={i + 1}>
-                                    <FormGroup>
-                                        <Input
-                                            // style={{ 'width': '25%' }}
-                                            name={stateName}
-                                            value={stateValue}
-                                            onChange={this.handleInputChange}
-                                            placeholder={placeholder}
-                                            type="text"
-                                        />
-                                    </FormGroup>
-                                </div>
-                            )
-                            break;
-                        case 2:
-                            stateName = 'color'
-                            stateValue = this.state.colors[0]
-                            placeholder = 'Color'
-                            inputChildren.push(
-                                <div className='col-sm' key={i + 1}>
-                                    <FormGroup>
-                                        <Input
-                                            // style={{ 'width': '25%' }}
-                                            name={stateName}
-                                            value={stateValue}
-                                            onChange={this.handleInputChange}
-                                            placeholder={placeholder}
-                                            type="text"
-                                        />
-                                    </FormGroup>
-                                </div>
-                            )
-                            break;
-                        case 3:
-                            stateName = 'size'
-                            stateValue = this.state.sizes[0]
-                            placeholder = 'Size'
-                            inputChildren.push(
-                                <div className='col-sm' key={i + 1}>
-                                    <FormGroup>
-                                        <Input
-                                            // style={{ 'width': '25%' }}
-                                            name={stateName}
-                                            value={stateValue}
-                                            onChange={this.handleInputChange}
-                                            placeholder={placeholder}
-                                            type="text"
-                                        />
-                                    </FormGroup>
-                                </div>
-                            )
-                            break;
-                        default:
-                            inputChildren.push(
-                                <div className="col-sm" key={i + 1} >
-                                    <FormBtn
-                                        // style={{ 'width': '25%' }}
-                                        text={'Add Another Size'}
-                                        classes={"btn-info"}
-                                        disabled={false}
-                                        onClick={this.addChild}
-                                    />
-                                </div>
-                            )
-                            break;
-                    }
-                }
-                break;
+            // case addBrand:
+            //     headerTxt = 'Add Brand'
+            //     stateKey = 'addBrand'
+            //     name = 'brandName'
+            //     stateValue = this.state.brands[0]
+            //     placeholder = 'Brand Name'
+            //     for (let i = 0; i < 2; i++) {
+            //         switch (i) {
+            //             case 0:
+            //                 inputChildren.push(
+            //                     <div className='col-sm' key={i + 1}>
+            //                         <FormGroup>
+            //                             <Input
+            //                                 // style={{ 'width': '25%' }}
+            //                                 name={name}
+            //                                 value={stateValue}
+            //                                 onChange={this.handleInputChange}
+            //                                 placeholder={placeholder}
+            //                                 type="text"
+            //                             />
+            //                         </FormGroup>
+            //                     </div>
+            //                 )
+            //                 break;
+            //             default:
+            //                 inputChildren.push(
+            //                     <div className="col-sm" key={i + 1} id={i}>
+            //                         <FormBtn
+            //                             // style={{ 'width': '25%' }}
+            //                             text={'Add Another Brand'}
+            //                             classes={"btn-info"}
+            //                             disabled={false}
+            //                             onClick={this.addChild}
+            //                         />
+            //                     </div>
+            //                 )
+            //                 break;
+            //         }
+            //     }
+            //     break;
+            // case addStyle:
+            //     headerTxt = 'Add Style'
+            //     stateKey = 'addStyle'
+            //     for (let i = 0; i < 3; i++) {
+            //         switch (i) {
+            //             case 0:
+            //                 name = 'brandName'
+            //                 stateValue = this.state.brands[0]
+            //                 placeholder = 'Brand Name'
+            //                 inputChildren.push(
+            //                     <div className='col-sm' key={i + 1}>
+            //                         <FormGroup>
+            //                             <Input
+            //                                 // style={{ 'width': '25%' }}
+            //                                 name={name}
+            //                                 value={stateValue}
+            //                                 onChange={this.handleInputChange}
+            //                                 placeholder={placeholder}
+            //                                 type="text"
+            //                             />
+            //                         </FormGroup>
+            //                     </div>
+            //                 )
+            //                 break;
+            //             case 1:
+            //                 name = 'styleNumber'
+            //                 stateValue = this.state.styles[0]
+            //                 placeholder = 'Style Num'
+            //                 inputChildren.push(
+            //                     <div className='col-sm' key={i + 1}>
+            //                         <FormGroup>
+            //                             <Input
+            //                                 // style={{ 'width': '25%' }}
+            //                                 name={name}
+            //                                 value={stateValue}
+            //                                 onChange={this.handleInputChange}
+            //                                 placeholder={placeholder}
+            //                                 type="text"
+            //                             />
+            //                         </FormGroup>
+            //                     </div>
+            //                 )
+            //                 break;
+            //             default:
+            //                 inputChildren.push(
+            //                     <div className="col-sm" key={i + 1}>
+            //                         <FormBtn
+            //                             // style={{ 'width': '25%' }}
+            //                             text={'Add Another Style'}
+            //                             classes={"btn-info"}
+            //                             disabled={false}
+            //                             onClick={this.addChild}
+            //                         />
+            //                     </div>
+            //                 )
+            //                 break;
+            //         }
+            //     }
+            //     break;
+            // case addColor:
+            //     headerTxt = 'Add Color'
+            //     stateKey = 'addColor'
+            //     for (let i = 0; i < 4; i++) {
+            //         switch (i) {
+            //             case 0:
+            //                 name = 'brandName'
+            //                 stateValue = this.state.brands[0]
+            //                 placeholder = 'Brand Name'
+            //                 inputChildren.push(
+            //                     <div className='col-sm' key={i + 1}>
+            //                         <FormGroup>
+            //                             <Input
+            //                                 // style={{ 'width': '25%' }}
+            //                                 name={name}
+            //                                 value={stateValue}
+            //                                 onChange={this.handleInputChange}
+            //                                 placeholder={placeholder}
+            //                                 type="text"
+            //                             />
+            //                         </FormGroup>
+            //                     </div>
+            //                 )
+            //                 break;
+            //             case 1:
+            //                 name = 'styleNumber'
+            //                 stateValue = this.state.styles[0]
+            //                 placeholder = 'Style Num'
+            //                 inputChildren.push(
+            //                     <div className='col-sm' key={i + 1}>
+            //                         <FormGroup>
+            //                             <Input
+            //                                 // style={{ 'width': '25%' }}
+            //                                 name={name}
+            //                                 value={stateValue}
+            //                                 onChange={this.handleInputChange}
+            //                                 placeholder={placeholder}
+            //                                 type="text"
+            //                             />
+            //                         </FormGroup>
+            //                     </div>
+            //                 )
+            //                 break;
+            //             case 2:
+            //                 name = 'color'
+            //                 stateValue = this.state.colors[0]
+            //                 placeholder = 'Color'
+            //                 inputChildren.push(
+            //                     <div className='col-sm' key={i + 1}>
+            //                         <FormGroup>
+            //                             <Input
+            //                                 // style={{ 'width': '25%' }}
+            //                                 name={name}
+            //                                 value={stateValue}
+            //                                 onChange={this.handleInputChange}
+            //                                 placeholder={placeholder}
+            //                                 type="text"
+            //                             />
+            //                         </FormGroup>
+            //                     </div>
+            //                 )
+            //                 break;
+            //             default:
+            //                 inputChildren.push(
+            //                     <div className="col-sm" key={i + 1}>
+            //                         <FormBtn
+            //                             // style={{ 'width': '25%' }}
+            //                             text={'Add Another Color'}
+            //                             classes={"btn-info"}
+            //                             disabled={false}
+            //                             onClick={this.addChild}
+            //                         />
+            //                     </div>
+            //                 )
+            //                 break;
+            //         }
+            //     }
+            //     break;
+            // // =============
+            // case addSize:
+            //     headerTxt = 'Add Size'
+            //     stateKey = 'addSize'
+            //     for (let i = 0; i < 5; i++) {
+            //         switch (i) {
+            //             case 0:
+            //                 name = 'brandName'
+            //                 stateValue = this.state.brands[0]
+            //                 placeholder = 'Brand Name'
+            //                 inputChildren.push(
+            //                     <div className='col-sm' key={i + 1}>
+            //                         <FormGroup>
+            //                             <Input
+            //                                 // style={{ 'width': '25%' }}
+            //                                 name={name}
+            //                                 value={stateValue}
+            //                                 onChange={this.handleInputChange}
+            //                                 placeholder={placeholder}
+            //                                 type="text"
+            //                             />
+            //                         </FormGroup>
+            //                     </div>
+            //                 )
+            //                 break;
+            //             case 1:
+            //                 name = 'styleNumber'
+            //                 stateValue = this.state.styles[0]
+            //                 placeholder = 'Style Num'
+            //                 inputChildren.push(
+            //                     <div className='col-sm' key={i + 1}>
+            //                         <FormGroup>
+            //                             <Input
+            //                                 // style={{ 'width': '25%' }}
+            //                                 name={name}
+            //                                 value={stateValue}
+            //                                 onChange={this.handleInputChange}
+            //                                 placeholder={placeholder}
+            //                                 type="text"
+            //                             />
+            //                         </FormGroup>
+            //                     </div>
+            //                 )
+            //                 break;
+            //             case 2:
+            //                 name = 'color'
+            //                 stateValue = this.state.colors[0]
+            //                 placeholder = 'Color'
+            //                 inputChildren.push(
+            //                     <div className='col-sm' key={i + 1}>
+            //                         <FormGroup>
+            //                             <Input
+            //                                 // style={{ 'width': '25%' }}
+            //                                 name={name}
+            //                                 value={stateValue}
+            //                                 onChange={this.handleInputChange}
+            //                                 placeholder={placeholder}
+            //                                 type="text"
+            //                             />
+            //                         </FormGroup>
+            //                     </div>
+            //                 )
+            //                 break;
+            //             case 3:
+            //                 name = 'size'
+            //                 stateValue = this.state.sizes[0]
+            //                 placeholder = 'Size'
+            //                 inputChildren.push(
+            //                     <div className='col-sm' key={i + 1}>
+            //                         <FormGroup>
+            //                             <Input
+            //                                 // style={{ 'width': '25%' }}
+            //                                 name={name}
+            //                                 value={stateValue}
+            //                                 onChange={this.handleInputChange}
+            //                                 placeholder={placeholder}
+            //                                 type="text"
+            //                             />
+            //                         </FormGroup>
+            //                     </div>
+            //                 )
+            //                 break;
+            //             default:
+            //                 inputChildren.push(
+            //                     <div className="col-sm" key={i + 1} >
+            //                         <FormBtn
+            //                             // style={{ 'width': '25%' }}
+            //                             text={'Add Another Size'}
+            //                             classes={"btn-info"}
+            //                             disabled={false}
+            //                             onClick={this.addChild}
+            //                         />
+            //                     </div>
+            //                 )
+            //                 break;
+            //         }
+            //     }
+            //     break;
             default:
+                let products = this.state.products
+                let product = {
+                    brandName: '',
+                    styleNumber: '',
+                    color: '',
+                    size: ''
+                }
+                let value;
+                let brandOptions = []
+                brands.forEach(brand => {
+                    brandOptions.push(
+                        {
+                            value: {name: 'brandName', index: 0},
+                            label: brand.brandName
+                        } 
+                    )
+                });
                 headerTxt = 'Add Stock'
                 stateKey = 'addStock'
+                value=product[name]
                 for (let i = 0; i < 5; i++) {
                     switch (i) {
                         case 0:
-                            stateName = 'brandName'
-                            stateValue = this.state.brands[0]
-                            placeholder = 'Brand Name'
+                            name='brandName'
                             inputChildren.push(
-                                <div className='col-sm' key={i + 1}>
+                                <div className='col-sm' key={frmChldCnt + 1}>
                                     <FormGroup>
                                         <Dropdown
-                                            options={[]}
-                                            // onChange={this._onSelect} 
-                                            // value={defaultOption} 
+                                            options={brandOptions}
+                                            onChange={this.dropdownChange} 
+                                            value={value}
                                             placeholder="Select a Brand"
                                         />
                                     </FormGroup>
@@ -400,16 +503,15 @@ class AdminJumbo extends Component {
                             )
                             break;
                         case 1:
-                            stateName = 'styleNumber'
-                            stateValue = this.state.styles[0]
-                            placeholder = 'Style Num'
+
                             inputChildren.push(
-                                <div className='col-sm' key={i + 1}>
+                                <div className='col-sm' key={frmChldCnt + 2}>
                                     <FormGroup>
                                         <Dropdown
-                                            options={[]}
+                                            name='styleNumber'
+                                            options={styles}
                                             // onChange={this._onSelect} 
-                                            // value={defaultOption} 
+                                            value={product[name]}
                                             placeholder="Select a Style"
                                         />
                                     </FormGroup>
@@ -417,16 +519,15 @@ class AdminJumbo extends Component {
                             )
                             break;
                         case 2:
-                            stateName = 'color'
-                            stateValue = this.state.colors[0]
-                            placeholder = 'Color'
+
                             inputChildren.push(
-                                <div className='col-sm' key={i + 1}>
+                                <div className='col-sm' key={frmChldCnt + 3}>
                                     <FormGroup>
                                         <Dropdown
-                                            options={[]}
+                                            name='color'
+                                            options={colors}
                                             // onChange={this._onSelect} 
-                                            // value={defaultOption} 
+                                            value={product[name]}
                                             placeholder="Select a Color"
                                         />
                                     </FormGroup>
@@ -434,16 +535,15 @@ class AdminJumbo extends Component {
                             )
                             break;
                         case 3:
-                            stateName = 'size'
-                            stateValue = this.state.sizes[0]
-                            placeholder = 'Size'
+
                             inputChildren.push(
-                                <div className='col-sm' key={i + 1}>
+                                <div className='col-sm' key={frmChldCnt + 4}>
                                     <FormGroup>
                                         <Dropdown
-                                            options={[]}
+                                            name='size'
+                                            options={sizes}
                                             // onChange={this._onSelect} 
-                                            // value={defaultOption} 
+                                            value={product[name]}
                                             placeholder="Select a Size"
                                         />
                                     </FormGroup>
@@ -452,10 +552,10 @@ class AdminJumbo extends Component {
                             break;
                         default:
                             inputChildren.push(
-                                <div className="col-sm" key={i + 1} >
+                                <div className="col-sm" key={frmChldCnt + ' addBtn'} >
                                     <FormBtn
                                         // style={{ 'width': '25%' }}
-                                        text={'Add Another Size'}
+                                        text={'Add Another Product'}
                                         classes={"btn-info"}
                                         disabled={false}
                                         onClick={this.addChild}
@@ -465,6 +565,10 @@ class AdminJumbo extends Component {
                             break;
                     }
                 }
+                products.push(product)
+                this.setState({
+                    products: products
+                })
                 break;
         }
 

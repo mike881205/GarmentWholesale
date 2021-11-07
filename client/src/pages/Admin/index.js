@@ -147,6 +147,12 @@ class Admin extends Component {
                             addSize: this.state.addSize,
                             addStock: this.state.addStock
                         }}
+                        products={{
+                            brands: this.state.brands,
+                            styles: this.state.styles,
+                            colors: this.state.colors,
+                            sizes: this.state.sizes
+                        }}
                     />
                 );
             }
