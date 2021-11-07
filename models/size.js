@@ -5,7 +5,8 @@ module.exports = function(sequelize, DataTypes) {
             allowNull: false
         },
         cost: {
-            type: DataTypes.DECIMAL(10,2),            
+            type: DataTypes.STRING,
+            // type: DataTypes.DECIMAL(10,2),            
             allowNull: false
         },
         createdAt: {

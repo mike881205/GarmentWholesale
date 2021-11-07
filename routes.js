@@ -65,13 +65,48 @@ router.post("/api/addProduct", (req, res) => {
   });
 });
 
-router.get("/api/getGarments", function (req, res) {
-  db.Brand.findAll({ include: { all: true, nested: true }})
+router.get("/api/getBrands", (req, res) => {
+  db.Brand.findAll({ 
+    // include: { all: true, nested: true}
+  })
     .then(dbResults => res.json(dbResults))
     .catch(err => {
       console.log(err);
       res.json(err);
     });
-})
+});
+
+router.get("/api/getStyles", (req, res) => {
+  db.Style.findAll({ 
+    // include: { all: true, nested: true}
+  })
+    .then(dbResults => res.json(dbResults))
+    .catch(err => {
+      console.log(err);
+      res.json(err);
+    });
+});
+
+router.get("/api/getColors", (req, res) => {
+  db.Color.findAll({ 
+    // include: { all: true, nested: true}
+  })
+    .then(dbResults => res.json(dbResults))
+    .catch(err => {
+      console.log(err);
+      res.json(err);
+    });
+});
+
+router.get("/api/getSizes", (req, res) => {
+  db.Size.findAll({ 
+    // include: { all: true, nested: true}
+  })
+    .then(dbResults => res.json(dbResults))
+    .catch(err => {
+      console.log(err);
+      res.json(err);
+    });
+});
 
 module.exports = router;

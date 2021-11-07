@@ -19,7 +19,16 @@ export default {
   addProduct: stock => {
     return axios.post("/api/addProduct", stock);
   },
-  getGarments: () => {
-    return axios.get("/api/getGarments");
-  }
+  getBrands: () => {
+    return axios.get("/api/getBrands");
+  },
+  getStyles: () => {
+    return axios.get("/api/getStyles");
+  },
+  getColors: () => {
+    return axios.get("/api/getColors");
+  },
+  getSizes: () => {
+    return axios.get("/api/getSizes");
+  },
 };

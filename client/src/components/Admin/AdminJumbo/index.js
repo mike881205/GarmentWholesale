@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import Dropdown from 'react-dropdown';
 import 'react-dropdown/style.css';
-import { FormGroup, Input, Label, Small, FormBtn } from "../../Form";
-import API from "../../../utils/API";
+import { FormGroup, Input, FormBtn } from "../../Form";
+// import API from "../../../utils/API";
 
 
 class AdminJumbo extends Component {
