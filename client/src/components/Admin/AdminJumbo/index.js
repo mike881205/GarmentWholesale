@@ -44,6 +44,7 @@ class AdminJumbo extends Component {
                 index={formChildren.length}
                 key={frmChldCnt}
                 products={products}
+                warehouses={this.props.warehouses}
                 updateProductList={this.updateProductList}
                 removeChild={this.removeChild}
             />
@@ -378,6 +379,7 @@ class AdminJumbo extends Component {
                         index={0}
                         key={frmChldCnt}
                         products={products}
+                        warehouses={this.props.warehouses}
                         updateProductList={this.updateProductList}
                         id={frmChldCnt}
                         removeChild={this.removeChild}
@@ -403,7 +405,7 @@ class AdminJumbo extends Component {
     render() {
 
         return (
-            <div className="container jumbotron" align="center">
+            <div className="container" align="center">
                 <div className="row">
                     <div className="col-sm">
                         <h1>{this.state.headerTxt}</h1>

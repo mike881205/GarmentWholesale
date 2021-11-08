@@ -168,8 +168,17 @@ class StockChild extends Component {
                         })
                     }
                 })
+                this.props.warehouses.forEach(warehouse => {
+                    options.warehouses.push(
+                        {
+                            label: warehouse.city + ', ' + warehouse.state,
+                            value: 'warehouse'
+                        }
+                    )
+                });
                 break;
             default:
+
                 break;
         }
 
@@ -211,7 +220,7 @@ class StockChild extends Component {
                                 options={this.state.options.brands}
                                 onChange={this.dropdownChange}
                                 value={this.state.brand.brandName}
-                                placeholder="Select a Brand"
+                                placeholder="Select Brand"
                             />
                         </FormGroup>
                     </div>
@@ -222,7 +231,7 @@ class StockChild extends Component {
                                 onChange={this.dropdownChange}
                                 value={this.state.style.styleNum}
                                 disabled={!this.state.brand ? true : false}
-                                placeholder="Select a Style"
+                                placeholder="Select Style"
                             />
                         </FormGroup>
                     </div>
@@ -233,7 +242,7 @@ class StockChild extends Component {
                                 onChange={this.dropdownChange}
                                 value={this.state.color.color}
                                 disabled={!this.state.style ? true : false}
-                                placeholder="Select a Color"
+                                placeholder="Select Color"
                             />
                         </FormGroup>
                     </div>
@@ -244,25 +253,31 @@ class StockChild extends Component {
                                 onChange={this.dropdownChange}
                                 value={this.state.size.size}
                                 disabled={!this.state.color ? true : false}
-                                placeholder="Select a Size"
+                                placeholder="Select Size"
                             />
                         </FormGroup>
                     </div>
-                    {
-                        this.props.index > 0 ?
-                            < div className="col-sm">
-                                <FormBtn
-                                    id={this.props.id}
-                                    text={'X'}
-                                    // style={{ 'width': '10%' }}
-                                    classes={"btn-danger"}
-                                    disabled={false}
-                                    onClick={this.props.removeChild}
-                                />
-                            </div >
-                            :
-                            ''
-                    }
+                    <div className='col-sm'>
+                        <FormGroup>
+                            <Dropdown
+                                options={this.state.options.warehouses}
+                                onChange={this.dropdownChange}
+                                value={this.state.warehouse ? this.state.warehouse.city + ', ' + this.state.warehouse.state : ''}
+                                disabled={!this.state.size ? true : false}
+                                placeholder="Select Warehouse"
+                            />
+                        </FormGroup>
+                    </div>
+                    < div className="col-sm">
+                        <FormBtn
+                            id={this.props.id}
+                            text={'X'}
+                            // style={{ 'width': '10%' }}
+                            classes={"btn-danger"}
+                            disabled={false}
+                            onClick={this.props.removeChild}
+                        />
+                    </div >
                 </div>
             );
         }

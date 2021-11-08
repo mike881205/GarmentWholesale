@@ -19,6 +19,9 @@ export default {
   addProduct: stock => {
     return axios.post("/api/addProduct", stock);
   },
+  getWarehouses: () => {
+    return axios.get("/api/getWarehouses");
+  },
   getBrands: () => {
     return axios.get("/api/getBrands");
   },

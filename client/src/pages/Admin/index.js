@@ -14,6 +14,7 @@ class Admin extends Component {
         styles: [],
         colors: [],
         sizes: [],
+        warehouses: [],
         addBrand: false,
         addStyle: false,
         addColor: false,
@@ -24,41 +25,50 @@ class Admin extends Component {
 
     componentDidMount() {
         console.log("loading")
-        API.getBrands()
+        API.getWarehouses()
             .then(res => {
                 console.log(res.data)
-                this.setState({brands: res.data})
-                API.getStyles()
-                .then(res => {
-                    console.log(res.data)
-                    this.setState({styles: res.data})
-                    API.getColors()
+                this.setState({ warehouses: res.data })
+                API.getBrands()
                     .then(res => {
                         console.log(res.data)
-                        this.setState({colors: res.data})
-                        API.getSizes()
-                        .then(res => {
-                            console.log(res.data)
-                            this.setState({
-                                sizes: res.data,
-                                loading: false
+                        this.setState({ brands: res.data })
+                        API.getStyles()
+                            .then(res => {
+                                console.log(res.data)
+                                this.setState({ styles: res.data })
+                                API.getColors()
+                                    .then(res => {
+                                        console.log(res.data)
+                                        this.setState({ colors: res.data })
+                                        API.getSizes()
+                                            .then(res => {
+                                                console.log(res.data)
+                                                this.setState({
+                                                    sizes: res.data,
+                                                    loading: false
+                                                })
+                                            })
+                                            .catch(err => {
+                                                console.log(err);
+                                            });
+                                    })
+                                    .catch(err => {
+                                        console.log(err);
+                                    });
                             })
-                        })
-                        .catch(err => {
-                            console.log(err);
-                        });
+                            .catch(err => {
+                                console.log(err);
+                            });
                     })
                     .catch(err => {
                         console.log(err);
                     });
-                })
-                .catch(err => {
-                    console.log(err);
-                });
             })
             .catch(err => {
                 console.log(err);
             });
+
     }
 
     addStock = event => {
@@ -153,9 +163,10 @@ class Admin extends Component {
                             colors: this.state.colors,
                             sizes: this.state.sizes
                         }}
-                        // warehouses={{
+                        warehouses={this.state.warehouses}
+                    // warehouses={{
 
-                        // }}
+                    // }}
                     />
                 );
             }
@@ -163,11 +174,11 @@ class Admin extends Component {
         else {
             return (
                 <div>
-                Loading...
-            </div>
+                    Loading...
+                </div>
             )
         }
-        
+
     }
 }
 

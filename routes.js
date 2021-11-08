@@ -65,6 +65,17 @@ router.post("/api/addProduct", (req, res) => {
   });
 });
 
+router.get("/api/getWarehouses", (req, res) => {
+  db.Warehouse.findAll({ 
+    // include: { all: true, nested: true}
+  })
+    .then(dbResults => res.json(dbResults))
+    .catch(err => {
+      console.log(err);
+      res.json(err);
+    });
+});
+
 router.get("/api/getBrands", (req, res) => {
   db.Brand.findAll({ 
     // include: { all: true, nested: true}
