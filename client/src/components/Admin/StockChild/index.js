@@ -12,7 +12,12 @@ class StockChild extends Component {
         style: '',
         color: '',
         size: '',
-        warehouse: '',
+        warehouses: [
+            { qty: '', WarehouseId: 1 },
+            { qty: '', WarehouseId: 2 },
+            { qty: '', WarehouseId: 3 },
+            { qty: '', WarehouseId: 4 },
+        ],
         quantity: '',
         options: {
             brands: [],
@@ -29,12 +34,11 @@ class StockChild extends Component {
         const { label, value } = event;
         let id;
         let options = this.state.options
-        let stateObj = {
+        let prodObj = {
             brand: this.state.brand,
             style: this.state.style,
             color: this.state.color,
-            size: this.state.size,
-            warehouse: ''
+            size: this.state.size
         }
         let labelObj;
 
@@ -43,18 +47,21 @@ class StockChild extends Component {
                 brands.forEach(brand => {
                     if (label === brand.brandName) {
                         id = brand.id
-                        stateObj.brand = brand
+                        prodObj.brand = brand
                         labelObj = brand
                         this.setState({
-                            brand: brand,
                             style: '',
                             color: '',
                             size: '',
-                            warehouse: ''
+                            warehouses: [
+                                { qty: '', WarehouseId: 1 },
+                                { qty: '', WarehouseId: 2 },
+                                { qty: '', WarehouseId: 3 },
+                                { qty: '', WarehouseId: 4 },
+                            ]
                         })
                     }
                 })
-
                 styles.forEach(style => {
                     if (id === style.BrandId) {
                         options.styles.push(
@@ -71,29 +78,30 @@ class StockChild extends Component {
                     brands: this.state.options.brands,
                     styles: this.state.options.styles,
                     colors: [],
-                    sizes: [],
-                    warehouses: []
+                    sizes: []
                 }
                 styles.forEach(style => {
                     if (label === style.styleNum) {
                         id = style.id
                         labelObj = style
-                        stateObj = {
+                        prodObj = {
                             brand: this.state.brand,
                             style: style,
                             color: '',
-                            size: '',
-                            warehouse: ''
+                            size: ''
                         }
                         this.setState({
-                            style: style,
                             color: '',
                             size: '',
-                            warehouse: ''
+                            warehouses: [
+                                { qty: '', WarehouseId: 1 },
+                                { qty: '', WarehouseId: 2 },
+                                { qty: '', WarehouseId: 3 },
+                                { qty: '', WarehouseId: 4 },
+                            ]
                         })
                     }
                 })
-
                 colors.forEach(color => {
                     if (id === color.StyleId) {
                         options.colors.push(
@@ -117,21 +125,23 @@ class StockChild extends Component {
                     if (label === color.color) {
                         id = color.id
                         labelObj = color
-                        stateObj = {
+                        prodObj = {
                             brand: this.state.brand,
                             style: this.state.style,
                             color: color,
-                            size: '',
-                            warehouse: ''
+                            size: ''
                         }
                         this.setState({
-                            color: color,
                             size: '',
-                            warehouse: ''
+                            warehouses: [
+                                { qty: '', WarehouseId: 1 },
+                                { qty: '', WarehouseId: 2 },
+                                { qty: '', WarehouseId: 3 },
+                                { qty: '', WarehouseId: 4 },
+                            ]
                         })
                     }
                 })
-
                 sizes.forEach(size => {
                     if (id === size.ColorId) {
                         options.sizes.push(
@@ -155,34 +165,29 @@ class StockChild extends Component {
                     if (label === size.size) {
                         id = size.id
                         labelObj = size
-                        stateObj = {
+                        prodObj = {
                             brand: this.state.brand,
                             style: this.state.style,
                             color: this.state.color,
-                            size: size,
-                            warehouse: ''
+                            size: size
                         }
                         this.setState({
-                            size: size,
-                            warehouse: ''
+                            warehouses: [
+                                { qty: '', WarehouseId: 1 },
+                                { qty: '', WarehouseId: 2 },
+                                { qty: '', WarehouseId: 3 },
+                                { qty: '', WarehouseId: 4 },
+                            ]
                         })
                     }
                 })
-                this.props.warehouses.forEach(warehouse => {
-                    options.warehouses.push(
-                        {
-                            label: warehouse.city + ', ' + warehouse.state,
-                            value: 'warehouse'
-                        }
-                    )
-                });
                 break;
             default:
 
                 break;
         }
 
-        this.props.updateProductList(stateObj, this.state.index)
+        this.props.updateProductList(prodObj, this.state.index)
 
         this.setState({
             options: options,
@@ -190,7 +195,30 @@ class StockChild extends Component {
         });
     }
 
-
+    handleInputChange = event => {
+        let prodObj = {
+            brand: this.state.brand,
+            style: this.state.style,
+            color: this.state.color,
+            size: this.state.size,
+            totalQty: 0,
+            warehouses: {}
+        }
+        let warehouses = this.state.warehouses
+        var reg = /^\d+$/;
+        const { name, value } = event.target;
+        if (reg.test(value)) {
+            warehouses[name].qty = parseInt(value)
+            prodObj.warehouses = warehouses
+            warehouses.forEach(warehouse => {
+                prodObj.totalQty = prodObj.totalQty + warehouse.qty
+            })
+            this.props.updateProductList(prodObj, this.state.index)
+            this.setState({
+                warehouses: warehouses
+            });
+        }
+    };
 
     componentDidMount() {
         const { brands, styles, colors, sizes } = this.props.products
@@ -211,84 +239,128 @@ class StockChild extends Component {
     }
 
     render() {
-        if (this.state.loaded) {
-            return (
-                <div className="row" id={this.props.id}>
-                    <div className='col-sm'>
-                        <FormGroup>
-                            <Dropdown
-                                options={this.state.options.brands}
-                                onChange={this.dropdownChange}
-                                value={this.state.brand.brandName}
-                                placeholder="Select Brand"
+        return (
+            this.state.loaded ?
+                <div>
+                    <div className="row" id={this.props.id}>
+                        <div className="col-sm">
+                            <div className="row">
+                                <div className='col-sm'>
+                                    <FormGroup>
+                                        <Dropdown
+                                            options={this.state.options.brands}
+                                            onChange={this.dropdownChange}
+                                            value={this.state.brand.brandName}
+                                            placeholder="Select Brand"
+                                        />
+                                    </FormGroup>
+                                </div>
+                                <div className='col-sm'>
+                                    <FormGroup>
+                                        <Dropdown
+                                            options={this.state.options.styles ? this.state.options.styles : []}
+                                            onChange={this.dropdownChange}
+                                            value={this.state.style.styleNum}
+                                            disabled={!this.state.brand ? true : false}
+                                            placeholder="Select Style"
+                                        />
+                                    </FormGroup>
+                                </div>
+                                <div className='col-sm'>
+                                    <FormGroup>
+                                        <Dropdown
+                                            options={this.state.options.colors ? this.state.options.colors : []}
+                                            onChange={this.dropdownChange}
+                                            value={this.state.color.color}
+                                            disabled={!this.state.style ? true : false}
+                                            placeholder="Select Color"
+                                        />
+                                    </FormGroup>
+                                </div>
+                                <div className='col-sm'>
+                                    <FormGroup>
+                                        <Dropdown
+                                            options={this.state.options.sizes ? this.state.options.sizes : []}
+                                            onChange={this.dropdownChange}
+                                            value={this.state.size.size}
+                                            disabled={!this.state.color ? true : false}
+                                            placeholder="Select Size"
+                                        />
+                                    </FormGroup>
+                                </div>
+                            </div>
+                            <div className="row">
+                                <div className='col-sm'>
+                                    <FormGroup>
+                                        <Label text={this.props.warehouses[0].city + ', ' + this.props.warehouses[0].state} />
+                                        <Input
+                                            // style={{ 'width': '25%' }}
+                                            name={0}
+                                            value={this.state.warehouses[0].qty}
+                                            onChange={this.handleInputChange}
+                                            placeholder={'Enter Stock Qty'}
+                                            type="number"
+                                        />
+                                    </FormGroup>
+                                </div>
+                                <div className='col-sm'>
+                                    <FormGroup>
+                                        <Label text={this.props.warehouses[1].city + ', ' + this.props.warehouses[1].state} />
+                                        <Input
+                                            // style={{ 'width': '25%' }}
+                                            name={1}
+                                            value={this.state.warehouses[1].qty}
+                                            onChange={this.handleInputChange}
+                                            placeholder={'Enter Stock Qty'}
+                                            type="text"
+                                        />
+                                    </FormGroup>
+                                </div>
+                                <div className='col-sm'>
+                                    <FormGroup>
+                                        <Label text={this.props.warehouses[2].city + ', ' + this.props.warehouses[2].state} />
+                                        <Input
+                                            // style={{ 'width': '25%' }}
+                                            name={2}
+                                            value={this.state.warehouses[2].qty}
+                                            onChange={this.handleInputChange}
+                                            placeholder={'Enter Stock Qty'}
+                                            type="text"
+                                        />
+                                    </FormGroup>
+                                </div>
+                                <div className='col-sm'>
+                                    <FormGroup>
+                                        <Label text={this.props.warehouses[3].city + ', ' + this.props.warehouses[3].state} />
+                                        <Input
+                                            // style={{ 'width': '25%' }}
+                                            name={3}
+                                            value={this.state.warehouses[3].qty}
+                                            onChange={this.handleInputChange}
+                                            placeholder={'Enter Stock Qty'}
+                                            type="text"
+                                        />
+                                    </FormGroup>
+                                </div>
+                            </div>
+                        </div>
+                        < div className="col-sm-1">
+                            <FormBtn
+                                id={this.props.id}
+                                text={'X'}
+                                classes={"btn-danger"}
+                                disabled={false}
+                                onClick={this.props.removeChild}
                             />
-                        </FormGroup>
+                        </div >
                     </div>
-                    <div className='col-sm'>
-                        <FormGroup>
-                            <Dropdown
-                                options={this.state.options.styles ? this.state.options.styles : []}
-                                onChange={this.dropdownChange}
-                                value={this.state.style.styleNum}
-                                disabled={!this.state.brand ? true : false}
-                                placeholder="Select Style"
-                            />
-                        </FormGroup>
-                    </div>
-                    <div className='col-sm'>
-                        <FormGroup>
-                            <Dropdown
-                                options={this.state.options.colors ? this.state.options.colors : []}
-                                onChange={this.dropdownChange}
-                                value={this.state.color.color}
-                                disabled={!this.state.style ? true : false}
-                                placeholder="Select Color"
-                            />
-                        </FormGroup>
-                    </div>
-                    <div className='col-sm'>
-                        <FormGroup>
-                            <Dropdown
-                                options={this.state.options.sizes ? this.state.options.sizes : []}
-                                onChange={this.dropdownChange}
-                                value={this.state.size.size}
-                                disabled={!this.state.color ? true : false}
-                                placeholder="Select Size"
-                            />
-                        </FormGroup>
-                    </div>
-                    <div className='col-sm'>
-                        <FormGroup>
-                            <Dropdown
-                                options={this.state.options.warehouses}
-                                onChange={this.dropdownChange}
-                                value={this.state.warehouse ? this.state.warehouse.city + ', ' + this.state.warehouse.state : ''}
-                                disabled={!this.state.size ? true : false}
-                                placeholder="Select Warehouse"
-                            />
-                        </FormGroup>
-                    </div>
-                    < div className="col-sm">
-                        <FormBtn
-                            id={this.props.id}
-                            text={'X'}
-                            // style={{ 'width': '10%' }}
-                            classes={"btn-danger"}
-                            disabled={false}
-                            onClick={this.props.removeChild}
-                        />
-                    </div >
+                    <hr></hr>
                 </div>
-            );
-        }
-        else {
-            return (
+                :
                 <div>
 
                 </div>
-            )
-        }
-
+        );
     }
 }
 

@@ -425,9 +425,9 @@ class AdminJumbo extends Component {
                     </div>
                 </div>
 
-                <form>
-                    {this.state.formChildren}
-                </form>
+                    <form>
+                        {this.state.formChildren}
+                    </form>
 
                 <div className="row">
                     <div className="col-sm">
