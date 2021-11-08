@@ -153,6 +153,9 @@ class Admin extends Component {
                             colors: this.state.colors,
                             sizes: this.state.sizes
                         }}
+                        // warehouses={{
+
+                        // }}
                     />
                 );
             }
