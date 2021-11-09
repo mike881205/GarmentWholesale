@@ -47,17 +47,16 @@ router.get("/api/user", (req, res) => {
   }
 });
 
-router.post("/api/addStock", (req, res) => {
-  //****
-  //Do validation here before attempting to register user, such as checking for password length, capital letters, special characters, etc.
-  //****
-  console.log("Adding Stock...");
-  db.Stock.create({
-    qty: req.body.qty,
-    SizeId: req.body.SizeId,
-    WarehouseId: req.body.WarehouseId
-  }).then(info => {
-    console.log("Stock Added - " + info)
+router.put("/api/addStock", (req, res) => {
+  db.Stock.update(
+    { qty: req.body.qty },
+    {
+      where: {
+        SizeId: req.body.product,
+        WarehouseId: req.body.warehouse
+      }
+    }
+  ).then(info => {
     res.json(info);
   }).catch(err => {
     console.log(err);
@@ -71,6 +70,20 @@ router.get("/api/getStock", (req, res) => {
     //   WarehouseId: ''
     // }
     // include: { all: true, nested: true}
+  })
+    .then(dbResults => res.json(dbResults))
+    .catch(err => {
+      console.log(err);
+      res.json(err);
+    });
+});
+
+router.get("/api/searchStock", (req, res) => {
+  db.Stock.findAll({
+    where: {
+      WarehouseId: req.query.WarehouseId,
+      SizeId: req.query.SizeId
+    }
   })
     .then(dbResults => res.json(dbResults))
     .catch(err => {

@@ -3,6 +3,7 @@ import { FormGroup, Input, FormBtn } from "../../Form";
 import StockChild from "../StockChild";
 import Dropdown from 'react-dropdown';
 import 'react-dropdown/style.css';
+import API from "../../../utils/API";
 // import API from "../../../utils/API";
 
 
@@ -409,17 +410,36 @@ class AdminJumbo extends Component {
 
         let productList = this.state.productList
 
-        productList.forEach(product => {
-            product.warehouses.forEach(warehouse => {
-                let prodInfo = {
-                    qty: warehouse.qty,
-                    SizeId: product.size,
-                    WarehouseId: warehouse.WarehouseId
-                }
-                console.log(prodInfo)
-            })
-
-        })
+        productList.forEach((product, i) => {
+            product.warehouses.forEach((warehouse, j) => {
+                API.searchStock(product.size, warehouse.WarehouseId)
+                    .then(res => {
+                        let DBinfo = {
+                            product: product.size,
+                            warehouse: warehouse.WarehouseId,
+                            qty: res.data[0].qty + warehouse.qty
+                        }
+                        // Add Stock
+                        API.addStock(DBinfo)
+                            .then(res => {
+                                console.log(res)
+                                API.searchStock(DBinfo.product, DBinfo.warehouse)
+                                    .then(res => {
+                                        console.log(res.data)
+                                    })
+                                    .catch(err => {
+                                        console.log(err)
+                                    })
+                            })
+                            .catch(err => {
+                                console.log(err)
+                            })
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    });
+            });
+        });
 
         // API.addStock(prodInfo)
         //     .then(res => {
@@ -453,9 +473,9 @@ class AdminJumbo extends Component {
                     </div>
                 </div>
 
-                    <form>
-                        {this.state.formChildren}
-                    </form>
+                <form>
+                    {this.state.formChildren}
+                </form>
 
                 <div className="row">
                     <div className="col-sm">

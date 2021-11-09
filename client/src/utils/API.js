@@ -17,10 +17,14 @@ export default {
     return axios.get("/api/user/?username=" + username);
   },
   addStock: stockInfo => {
-    return axios.post("/api/addStock", stockInfo);
+    console.log("API: " + "\n" + stockInfo)
+    return axios.put("/api/addStock", stockInfo);
   },
   getStock: () => {
     return axios.get("/api/getStock");
+  },
+  searchStock: (SizeId, WarehouseId) => {
+    return axios.get("/api/searchStock/?SizeId=" + SizeId + "&WarehouseId=" + WarehouseId)
   },
   getWarehouses: () => {
     return axios.get("/api/getWarehouses");
