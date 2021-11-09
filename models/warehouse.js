@@ -23,7 +23,7 @@ module.exports = function (sequelize, DataTypes) {
     });
 
     Warehouse.associate = models => {
-        Warehouse.hasMany(models.Product, {
+        Warehouse.hasMany(models.Stock, {
             onDelete: "cascade"
         });
     };

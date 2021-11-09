@@ -399,7 +399,35 @@ class AdminJumbo extends Component {
     updateProductList = (obj, index) => {
         let productList = this.state.productList
         productList[index] = obj
+        console.log(obj)
+        console.log(productList)
         this.setState({ productList: productList })
+    }
+
+    addStock = event => {
+        event.preventDefault();
+
+        let productList = this.state.productList
+
+        productList.forEach(product => {
+            product.warehouses.forEach(warehouse => {
+                let prodInfo = {
+                    qty: warehouse.qty,
+                    SizeId: product.size,
+                    WarehouseId: warehouse.WarehouseId
+                }
+                console.log(prodInfo)
+            })
+
+        })
+
+        // API.addStock(prodInfo)
+        //     .then(res => {
+        //         console.log(res.data)
+        //     })
+        //     .catch(err => {
+        //         console.log(err);
+        //     });
     }
 
     render() {
@@ -436,7 +464,7 @@ class AdminJumbo extends Component {
                             text={'Submit'}
                             classes={"btn-warning"}
                             disabled={false}
-                            onClick={() => console.log(this.state.productList)}
+                            onClick={this.addStock}
                         />
                     </div>
                 </div>

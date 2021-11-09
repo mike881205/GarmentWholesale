@@ -16,8 +16,11 @@ export default {
   availableUN: username => {
     return axios.get("/api/user/?username=" + username);
   },
-  addProduct: stock => {
-    return axios.post("/api/addProduct", stock);
+  addStock: stockInfo => {
+    return axios.post("/api/addStock", stockInfo);
+  },
+  getStock: () => {
+    return axios.get("/api/getStock");
   },
   getWarehouses: () => {
     return axios.get("/api/getWarehouses");
@@ -25,13 +28,13 @@ export default {
   getBrands: () => {
     return axios.get("/api/getBrands");
   },
-  getStyles: () => {
-    return axios.get("/api/getStyles");
+  getStyles: BrandId => {
+    return axios.get("/api/getStyles/?BrandId=" + BrandId);
   },
-  getColors: () => {
-    return axios.get("/api/getColors");
+  getColors: StyleId => {
+    return axios.get("/api/getColors/?StyleId=" + StyleId);
   },
-  getSizes: () => {
-    return axios.get("/api/getSizes");
-  },
+  getSizes: ColorId => {
+    return axios.get("/api/getSizes/?ColorId=" + ColorId);
+  }
 };

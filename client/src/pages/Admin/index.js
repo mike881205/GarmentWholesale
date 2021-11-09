@@ -24,63 +24,53 @@ class Admin extends Component {
     }
 
     componentDidMount() {
+
+        let brands = []
+        let styles = []
+        let colors = []
+        let sizes = []
+        let warehouses = []
+
         console.log("loading")
         API.getWarehouses()
             .then(res => {
-                console.log(res.data)
+                warehouses = res.data
                 this.setState({ warehouses: res.data })
                 API.getBrands()
                     .then(res => {
-                        console.log(res.data)
+                        brands = res.data
                         this.setState({ brands: res.data })
-                        API.getStyles()
-                            .then(res => {
-                                console.log(res.data)
-                                this.setState({ styles: res.data })
-                                API.getColors()
-                                    .then(res => {
-                                        console.log(res.data)
-                                        this.setState({ colors: res.data })
-                                        API.getSizes()
-                                            .then(res => {
-                                                console.log(res.data)
+                        // API.getStyles()
+                        //     .then(res => {
+                        //         styles = res.data
+                        //         this.setState({ styles: res.data })
+                        //         API.getColors()
+                        //             .then(res => {
+                        //                 colors = res.data
+                        //                 this.setState({ colors: res.data })
+                        //                 API.getSizes()
+                        //                     .then(res => {
+                        //                         sizes = res.data
                                                 this.setState({
-                                                    sizes: res.data,
+                                                    // sizes: res.data,
                                                     loading: false
                                                 })
-                                            })
-                                            .catch(err => {
-                                                console.log(err);
-                                            });
-                                    })
-                                    .catch(err => {
-                                        console.log(err);
-                                    });
-                            })
-                            .catch(err => {
-                                console.log(err);
-                            });
+                        //                     })
+                        //                     .catch(err => {
+                        //                         console.log(err);
+                        //                     });
+                        //             })
+                        //             .catch(err => {
+                        //                 console.log(err);
+                        //             });
+                        //     })
+                        //     .catch(err => {
+                        //         console.log(err);
+                        //     });
                     })
                     .catch(err => {
                         console.log(err);
                     });
-            })
-            .catch(err => {
-                console.log(err);
-            });
-
-    }
-
-    addStock = event => {
-        event.preventDefault();
-        let prodInfo = {
-            prodNum: this.state.prodObj.prodNum,
-            qty: this.state.prodObj.qty,
-            WarehouseId: this.state.prodObj.WarehouseId
-        }
-        API.addStock(prodInfo)
-            .then(res => {
-                console.log(res.data)
             })
             .catch(err => {
                 console.log(err);
@@ -148,7 +138,6 @@ class Admin extends Component {
             else {
                 return (
                     <AdminJumbo
-                        dbInfo={this.state.brands}
                         backOnClick={obj => this.setState(obj)}
                         addType={{
                             addBrand: this.state.addBrand,
@@ -164,9 +153,6 @@ class Admin extends Component {
                             sizes: this.state.sizes
                         }}
                         warehouses={this.state.warehouses}
-                    // warehouses={{
-
-                    // }}
                     />
                 );
             }

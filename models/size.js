@@ -20,6 +20,9 @@ module.exports = function(sequelize, DataTypes) {
     });
 
     Size.associate = models => {
+        Size.hasMany(models.Stock, {
+            onDelete: "cascade"
+        });
         Size.belongsTo(models.Brand, {
             foreignKey: {
                 allowNull: false

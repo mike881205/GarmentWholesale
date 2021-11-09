@@ -47,17 +47,17 @@ router.get("/api/user", (req, res) => {
   }
 });
 
-router.post("/api/addProduct", (req, res) => {
+router.post("/api/addStock", (req, res) => {
   //****
   //Do validation here before attempting to register user, such as checking for password length, capital letters, special characters, etc.
   //****
-  console.log("Adding Product...");
+  console.log("Adding Stock...");
   db.Stock.create({
-    productNum: req.body.name,
     qty: req.body.qty,
-    WarehouseId: req.body.WarehouseIdd
+    SizeId: req.body.SizeId,
+    WarehouseId: req.body.WarehouseId
   }).then(info => {
-    console.log("Stock Added")
+    console.log("Stock Added - " + info)
     res.json(info);
   }).catch(err => {
     console.log(err);
@@ -65,8 +65,22 @@ router.post("/api/addProduct", (req, res) => {
   });
 });
 
+router.get("/api/getStock", (req, res) => {
+  db.Stock.findAll({
+    // where: {
+    //   WarehouseId: ''
+    // }
+    // include: { all: true, nested: true}
+  })
+    .then(dbResults => res.json(dbResults))
+    .catch(err => {
+      console.log(err);
+      res.json(err);
+    });
+});
+
 router.get("/api/getWarehouses", (req, res) => {
-  db.Warehouse.findAll({ 
+  db.Warehouse.findAll({
     // include: { all: true, nested: true}
   })
     .then(dbResults => res.json(dbResults))
@@ -77,7 +91,7 @@ router.get("/api/getWarehouses", (req, res) => {
 });
 
 router.get("/api/getBrands", (req, res) => {
-  db.Brand.findAll({ 
+  db.Brand.findAll({
     // include: { all: true, nested: true}
   })
     .then(dbResults => res.json(dbResults))
@@ -88,8 +102,8 @@ router.get("/api/getBrands", (req, res) => {
 });
 
 router.get("/api/getStyles", (req, res) => {
-  db.Style.findAll({ 
-    // include: { all: true, nested: true}
+  db.Style.findAll({
+    where: { BrandId: req.query.BrandId }
   })
     .then(dbResults => res.json(dbResults))
     .catch(err => {
@@ -99,8 +113,8 @@ router.get("/api/getStyles", (req, res) => {
 });
 
 router.get("/api/getColors", (req, res) => {
-  db.Color.findAll({ 
-    // include: { all: true, nested: true}
+  db.Color.findAll({
+    where: { StyleId: req.query.StyleId },
   })
     .then(dbResults => res.json(dbResults))
     .catch(err => {
@@ -110,8 +124,10 @@ router.get("/api/getColors", (req, res) => {
 });
 
 router.get("/api/getSizes", (req, res) => {
-  db.Size.findAll({ 
-    // include: { all: true, nested: true}
+  db.Size.findAll({
+    where: {
+      ColorId: req.query.ColorId
+    }
   })
     .then(dbResults => res.json(dbResults))
     .catch(err => {
