@@ -16,9 +16,11 @@ export default {
   availableUN: username => {
     return axios.get("/api/user/?username=" + username);
   },
-  addStock: stockInfo => {
-    console.log("API: " + "\n" + stockInfo)
-    return axios.put("/api/addStock", stockInfo);
+  createStock: (SizeId, WarehouseId, qty) => {
+    return axios.post("/api/createStock", SizeId, WarehouseId, qty);
+  },
+  addStock: (SizeId, WarehouseId, qty) => {
+    return axios.put("/api/addStock/?SizeId=" + SizeId + "&WarehouseId=" + WarehouseId + "&qty=" + qty);
   },
   getStock: () => {
     return axios.get("/api/getStock");

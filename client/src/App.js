@@ -16,11 +16,27 @@ import Admin from "./pages/Admin";
 
 class App extends Component {
   state = {
-    
+    warehouses: '',
+    brands: ''
   };
 
   componentDidMount() {
     // this.isAuthorized();
+
+    API.getWarehouses()
+      .then(res => {
+        this.setState({ warehouses: res.data })
+        API.getBrands()
+          .then(res => {
+            this.setState({ brands: res.data })
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      })
+      .catch(err => {
+        console.log(err);
+      });
   }
 
   isAuthorized = () => {
@@ -54,7 +70,10 @@ class App extends Component {
     return (
       <Router>
         <Route exact path="/">
-          <Admin />
+          <Admin
+            brands={this.state.brands}
+            warehouses={this.state.warehouses}
+          />
           {/* <Home logout={this.logout} /> */}
         </Route>
       </Router>

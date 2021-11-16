@@ -29,8 +29,7 @@ class StockChild extends Component {
     }
 
     dropdownChange = event => {
-        const { brands, styles, colors, sizes } = this.props.products
-        const { label, value } = event;
+        const { value } = event;
         const {name, id} = value
 
         let options = {
@@ -174,13 +173,6 @@ class StockChild extends Component {
                 })
                 break;
         }
-
-        // this.props.updateProductList(prodObj, this.state.index)
-
-        // this.setState({
-        //     options: options,
-        //     [value]: labelObj
-        // });
     }
 
     handleInputChange = event => {
@@ -207,9 +199,8 @@ class StockChild extends Component {
     };
 
     componentDidMount() {
-        const { brands, styles, colors, sizes } = this.props.products
         let options = this.state.options
-        brands.forEach((brand, i) => {
+        this.props.brands.forEach((brand, i) => {
             options.brands.push(
                 {
                     label: brand.brandName,

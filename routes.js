@@ -47,6 +47,20 @@ router.get("/api/user", (req, res) => {
   }
 });
 
+router.post("/api/createStock", (req, res) => {
+  db.Stock.create({
+    qty: req.body.qty,
+    SizeId: req.body.SizeId,
+    WarehouseId: req.body.WarehouseId
+  })
+    .then(info => {
+      res.json(info);
+    }).catch(err => {
+      console.log(err);
+      res.json(err);
+    });
+});
+
 router.put("/api/addStock", (req, res) => {
   db.Stock.update(
     { qty: req.body.qty },

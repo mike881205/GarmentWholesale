@@ -31,9 +31,6 @@ class AdminJumbo extends Component {
 
     addChild = event => {
         event.preventDefault();
-        const { addType, products } = this.props
-        const { addBrand, addStyle, addColor, addSize } = addType
-        const { brands, styles, colors, sizes } = products
         let formChildren = this.state.formChildren
         let frmChldCnt = this.state.frmChldCnt
 
@@ -44,7 +41,7 @@ class AdminJumbo extends Component {
                 id={frmChldCnt}
                 index={formChildren.length}
                 key={frmChldCnt}
-                products={products}
+                brands={this.props.brands}
                 warehouses={this.props.warehouses}
                 updateProductList={this.updateProductList}
                 removeChild={this.removeChild}
@@ -84,16 +81,11 @@ class AdminJumbo extends Component {
     }
 
     componentDidMount() {
-        const { addType, products } = this.props
-        const { addBrand, addStyle, addColor, addSize, addStock } = addType
-        const { brands, styles, colors, sizes } = products
+        // const { addType } = this.props
+        // const { addBrand, addStyle, addColor, addSize, addStock } = addType
         let headerTxt;
-        let name;
-        let stateValue;
-        let placeholder;
         let stateKey;
         let formChildren = []
-        let inputChildren = []
         let frmChldCnt = this.state.frmChldCnt
 
         switch (true) {
@@ -379,7 +371,7 @@ class AdminJumbo extends Component {
                     <StockChild
                         index={0}
                         key={frmChldCnt}
-                        products={products}
+                        brands={this.props.brands}
                         warehouses={this.props.warehouses}
                         updateProductList={this.updateProductList}
                         id={frmChldCnt}

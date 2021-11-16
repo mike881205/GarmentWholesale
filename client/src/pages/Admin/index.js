@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import AdminJumbo from "../../components/Admin/AdminJumbo";
 import { FormBtn } from "../../components/Form";
+import CreateStock from "../../utils/CreateStock";
 import API from "../../utils/API";
 
 class Admin extends Component {
@@ -19,150 +20,87 @@ class Admin extends Component {
         addStyle: false,
         addColor: false,
         addSize: false,
-        addStock: false,
-        loading: true
+        addStock: false
     }
 
     componentDidMount() {
-
-        let brands = []
-        let styles = []
-        let colors = []
-        let sizes = []
-        let warehouses = []
-
-        console.log("loading")
-        API.getWarehouses()
-            .then(res => {
-                warehouses = res.data
-                this.setState({ warehouses: res.data })
-                API.getBrands()
-                    .then(res => {
-                        brands = res.data
-                        this.setState({ brands: res.data })
-                        // API.getStyles()
-                        //     .then(res => {
-                        //         styles = res.data
-                        //         this.setState({ styles: res.data })
-                        //         API.getColors()
-                        //             .then(res => {
-                        //                 colors = res.data
-                        //                 this.setState({ colors: res.data })
-                        //                 API.getSizes()
-                        //                     .then(res => {
-                        //                         sizes = res.data
-                                                this.setState({
-                                                    // sizes: res.data,
-                                                    loading: false
-                                                })
-                        //                     })
-                        //                     .catch(err => {
-                        //                         console.log(err);
-                        //                     });
-                        //             })
-                        //             .catch(err => {
-                        //                 console.log(err);
-                        //             });
-                        //     })
-                        //     .catch(err => {
-                        //         console.log(err);
-                        //     });
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    });
-            })
-            .catch(err => {
-                console.log(err);
-            });
+        // ONLY USE THIS AFTER INITIAL DB SEEDS HAVE BEEN RUN
+        // CreateStock.addStock()
+        console.log(this.props)
     }
 
     render() {
 
         const { addBrand, addStyle, addColor, addSize, addStock } = this.state
 
-        if (!this.state.loading) {
-            if (!addBrand && !addStyle && !addColor && !addSize && !addStock) {
-                return (
-                    <div className="container jumbotron" align="center">
-                        <div className="row">
-                            <div className="col-sm">
-                                <h1>Admin</h1>
-                            </div>
-                        </div>
-                        <hr></hr>
-                        <div className="row">
-                            <div className="col-sm">
-                                <FormBtn
-                                    text={'Add Brand'}
-                                    classes={"btn-primary"}
-                                    onClick={() => this.setState({ addBrand: true })}
-                                />
-                            </div>
-                            <div className="col-sm">
-                                <FormBtn
-                                    text={'Add Style'}
-                                    classes={"btn-primary"}
-                                    disabled={this.state.brands.length > 0 ? '' : 'disabled'}
-                                    onClick={() => this.setState({ addStyle: true })}
-                                />
-                            </div>
-                            <div className="col-sm">
-                                <FormBtn
-                                    text={'Add Color'}
-                                    classes={"btn-primary"}
-                                    disabled={this.state.styles.length > 0 ? '' : 'disabled'}
-                                    onClick={() => this.setState({ addColor: true })}
-                                />
-                            </div>
-                            <div className="col-sm">
-                                <FormBtn
-                                    text={'Add Size'}
-                                    classes={"btn-primary"}
-                                    disabled={this.state.colors.length > 0 ? '' : 'disabled'}
-                                    onClick={() => this.setState({ addSize: true })}
-                                />
-                            </div>
-                            <div className="col-sm">
-                                <FormBtn
-                                    text={'Add Stock'}
-                                    classes={"btn-primary"}
-                                    disabled={false}
-                                    onClick={() => this.setState({ addStock: true })}
-                                />
-                            </div>
+        if (!addBrand && !addStyle && !addColor && !addSize && !addStock) {
+            return (
+                <div className="container jumbotron" align="center">
+                    <div className="row">
+                        <div className="col-sm">
+                            <h1>Admin</h1>
                         </div>
                     </div>
-                );
-            }
-            else {
-                return (
-                    <AdminJumbo
-                        backOnClick={obj => this.setState(obj)}
-                        addType={{
-                            addBrand: this.state.addBrand,
-                            addStyle: this.state.addStyle,
-                            addColor: this.state.addColor,
-                            addSize: this.state.addSize,
-                            addStock: this.state.addStock
-                        }}
-                        products={{
-                            brands: this.state.brands,
-                            styles: this.state.styles,
-                            colors: this.state.colors,
-                            sizes: this.state.sizes
-                        }}
-                        warehouses={this.state.warehouses}
-                    />
-                );
-            }
+                    <hr></hr>
+                    <div className="row">
+                        <div className="col-sm">
+                            <FormBtn
+                                text={'Add Brand'}
+                                classes={"btn-primary"}
+                                onClick={() => this.setState({ addBrand: true })}
+                            />
+                        </div>
+                        <div className="col-sm">
+                            <FormBtn
+                                text={'Add Style'}
+                                classes={"btn-primary"}
+                                disabled={this.state.brands.length > 0 ? '' : 'disabled'}
+                                onClick={() => this.setState({ addStyle: true })}
+                            />
+                        </div>
+                        <div className="col-sm">
+                            <FormBtn
+                                text={'Add Color'}
+                                classes={"btn-primary"}
+                                disabled={this.state.styles.length > 0 ? '' : 'disabled'}
+                                onClick={() => this.setState({ addColor: true })}
+                            />
+                        </div>
+                        <div className="col-sm">
+                            <FormBtn
+                                text={'Add Size'}
+                                classes={"btn-primary"}
+                                disabled={this.state.colors.length > 0 ? '' : 'disabled'}
+                                onClick={() => this.setState({ addSize: true })}
+                            />
+                        </div>
+                        <div className="col-sm">
+                            <FormBtn
+                                text={'Add Stock'}
+                                classes={"btn-primary"}
+                                disabled={false}
+                                onClick={() => this.setState({ addStock: true })}
+                            />
+                        </div>
+                    </div>
+                </div>
+            );
         }
         else {
             return (
-                <div>
-                    Loading...
-                </div>
-            )
+                <AdminJumbo
+                    backOnClick={obj => this.setState(obj)}
+                    addType={{
+                        addBrand: this.state.addBrand,
+                        addStyle: this.state.addStyle,
+                        addColor: this.state.addColor,
+                        addSize: this.state.addSize,
+                        addStock: this.state.addStock
+                    }}
+                    brands={this.props.brands}
+                    warehouses={this.props.warehouses}
+                />
+            );
         }
 
     }
