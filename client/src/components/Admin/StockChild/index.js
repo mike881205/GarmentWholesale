@@ -7,7 +7,6 @@ import API from "../../../utils/API";
 class StockChild extends Component {
 
     state = {
-        index: '',
         brand: '',
         style: '',
         color: '',
@@ -18,19 +17,21 @@ class StockChild extends Component {
             { qty: 0, WarehouseId: 3 },
             { qty: 0, WarehouseId: 4 },
         ],
-        quantity: '',
         options: {
             brands: [],
             styles: [],
             colors: [],
             sizes: []
         },
+        complete: false,
         loaded: false
     }
 
     dropdownChange = event => {
         const { value } = event;
-        const {name, id} = value
+        const { name, id } = value
+
+        let prodObj = this.props.productList[this.props.index]
 
         let options = {
             brands: this.state.options.brands,
@@ -173,29 +174,56 @@ class StockChild extends Component {
                 })
                 break;
         }
+
+        prodObj.complete = false
+
+        this.props.updateProductList(prodObj, this.props.index)
     }
 
     handleInputChange = event => {
         console.log(this.state.size)
-        let prodObj = {
-            size: this.state.size.value.id,
-            totalQty: 0,
-            warehouses: []
-        }
-        let warehouses = this.state.warehouses
-        var reg = /^\d+$/;
+        const reg = /^\d+$/;
         const { name, value } = event.target;
+        let warehouses = this.state.warehouses
+        let count = 0
+        let prodObj = this.props.productList[this.props.index]
+
+        prodObj.totalQty = 0
+
         if (reg.test(value)) {
             warehouses[name].qty = parseInt(value)
-            prodObj.warehouses = warehouses
-            warehouses.forEach(warehouse => {
-                prodObj.totalQty = prodObj.totalQty + warehouse.qty
-            })
-            this.props.updateProductList(prodObj, this.state.index)
-            this.setState({
-                warehouses: warehouses
-            });
         }
+        else if (value === '') {
+            warehouses[name].qty = ''
+        }
+
+        warehouses.forEach(warehouse => {
+            if (warehouse.qty !== '') {
+                prodObj.totalQty = prodObj.totalQty + warehouse.qty
+            }
+            else {
+                count++
+            }
+        })
+
+        if (count < 4) {
+            prodObj.complete = true
+        }
+        else {
+            prodObj.complete = false
+        }
+
+        prodObj.brand = this.state.brand
+        prodObj.style = this.state.style
+        prodObj.color = this.state.color
+        prodObj.size = this.state.size
+        prodObj.warehouses = warehouses
+
+        this.props.updateProductList(prodObj, this.props.index)
+
+        this.setState({
+            warehouses: warehouses
+        });
     };
 
     componentDidMount() {
@@ -212,7 +240,6 @@ class StockChild extends Component {
             )
         });
         this.setState({
-            index: this.props.index,
             options: options,
             loaded: true
         })

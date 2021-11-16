@@ -19,7 +19,8 @@ class AdminJumbo extends Component {
         styles: [],
         colors: [],
         sizes: [],
-        productList: []
+        productList: [],
+        submitDisable: true
     }
 
     handleInputChange = event => {
@@ -29,12 +30,50 @@ class AdminJumbo extends Component {
         });
     };
 
+    updateProductList = (obj, index) => {
+        let count = 0
+        let productList = this.state.productList
+
+        productList[index] = obj
+
+        productList.forEach(product => {
+            if (product.complete){
+                count++
+            }
+        })
+
+        if (count === productList.length) {
+            this.setState({ submitDisable: false})
+        }
+        else {
+            this.setState({ submitDisable: true})
+        }
+        
+        this.setState({ productList: productList })
+    }
+
     addChild = event => {
-        event.preventDefault();
+        if (event) {
+            event.preventDefault();
+        }
+
         let formChildren = this.state.formChildren
         let frmChldCnt = this.state.frmChldCnt
+        let prodObj = {
+            size: '',
+            totalQty: 0,
+            warehouses: [
+                { qty: 0, WarehouseId: 1 },
+                { qty: 0, WarehouseId: 2 },
+                { qty: 0, WarehouseId: 3 },
+                { qty: 0, WarehouseId: 4 },
+            ],
+            complete: false
+        }
 
         frmChldCnt++
+
+        this.updateProductList(prodObj, formChildren.length)
 
         formChildren.push(
             <StockChild
@@ -44,6 +83,7 @@ class AdminJumbo extends Component {
                 brands={this.props.brands}
                 warehouses={this.props.warehouses}
                 updateProductList={this.updateProductList}
+                productList={this.state.productList}
                 removeChild={this.removeChild}
             />
         )
@@ -80,6 +120,43 @@ class AdminJumbo extends Component {
         });
     }
 
+    addStock = event => {
+        event.preventDefault();
+
+        let productList = this.state.productList
+
+        productList.forEach((product, i) => {
+            product.warehouses.forEach((warehouse, j) => {
+                API.searchStock(product.size, warehouse.WarehouseId)
+                    .then(res => {
+                        let DBinfo = {
+                            product: product.size,
+                            warehouse: warehouse.WarehouseId,
+                            qty: res.data[0].qty + warehouse.qty
+                        }
+                        // Add Stock
+                        API.addStock(DBinfo)
+                            .then(res => {
+                                console.log(res)
+                                API.searchStock(DBinfo.product, DBinfo.warehouse)
+                                    .then(res => {
+                                        console.log(res.data)
+                                    })
+                                    .catch(err => {
+                                        console.log(err)
+                                    })
+                            })
+                            .catch(err => {
+                                console.log(err)
+                            })
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    });
+            });
+        });
+    }
+
     componentDidMount() {
         // const { addType } = this.props
         // const { addBrand, addStyle, addColor, addSize, addStock } = addType
@@ -87,6 +164,7 @@ class AdminJumbo extends Component {
         let stateKey;
         let formChildren = []
         let frmChldCnt = this.state.frmChldCnt
+        let productList = []
 
         switch (true) {
             // case addBrand:
@@ -367,79 +445,26 @@ class AdminJumbo extends Component {
             default:
                 headerTxt = 'Add Stock'
                 stateKey = 'addStock'
-                formChildren.push(
-                    <StockChild
-                        index={0}
-                        key={frmChldCnt}
-                        brands={this.props.brands}
-                        warehouses={this.props.warehouses}
-                        updateProductList={this.updateProductList}
-                        id={frmChldCnt}
-                        removeChild={this.removeChild}
-                    />
-                )
+                this.addChild()
+                // formChildren.push(
+                //     <StockChild
+                //         index={0}
+                //         key={frmChldCnt}
+                //         brands={this.props.brands}
+                //         warehouses={this.props.warehouses}
+                //         updateProductList={this.updateProductList}
+                //         id={frmChldCnt}
+                //         removeChild={this.removeChild}
+                //     />
+                // )
                 break;
         }
 
         this.setState({
             backOnClick: () => this.props.backOnClick({ [stateKey]: false }),
             headerTxt: headerTxt,
-            formChildren: formChildren,
             stateKey: stateKey
         })
-    }
-
-    updateProductList = (obj, index) => {
-        let productList = this.state.productList
-        productList[index] = obj
-        console.log(obj)
-        console.log(productList)
-        this.setState({ productList: productList })
-    }
-
-    addStock = event => {
-        event.preventDefault();
-
-        let productList = this.state.productList
-
-        productList.forEach((product, i) => {
-            product.warehouses.forEach((warehouse, j) => {
-                API.searchStock(product.size, warehouse.WarehouseId)
-                    .then(res => {
-                        let DBinfo = {
-                            product: product.size,
-                            warehouse: warehouse.WarehouseId,
-                            qty: res.data[0].qty + warehouse.qty
-                        }
-                        // Add Stock
-                        API.addStock(DBinfo)
-                            .then(res => {
-                                console.log(res)
-                                API.searchStock(DBinfo.product, DBinfo.warehouse)
-                                    .then(res => {
-                                        console.log(res.data)
-                                    })
-                                    .catch(err => {
-                                        console.log(err)
-                                    })
-                            })
-                            .catch(err => {
-                                console.log(err)
-                            })
-                    })
-                    .catch(err => {
-                        console.log(err)
-                    });
-            });
-        });
-
-        // API.addStock(prodInfo)
-        //     .then(res => {
-        //         console.log(res.data)
-        //     })
-        //     .catch(err => {
-        //         console.log(err);
-        //     });
     }
 
     render() {
@@ -475,7 +500,7 @@ class AdminJumbo extends Component {
                             style={{ 'width': '25%' }}
                             text={'Submit'}
                             classes={"btn-warning"}
-                            disabled={false}
+                            disabled={this.state.submitDisable}
                             onClick={this.addStock}
                         />
                     </div>
