@@ -3,6 +3,7 @@ import { FormGroup, Input, Label, Small, FormBtn } from "../../Form";
 import Dropdown from 'react-dropdown';
 import 'react-dropdown/style.css';
 import API from "../../../utils/API";
+import DropSearch from "../../DropSearch";
 
 class StockChild extends Component {
 
@@ -245,6 +246,165 @@ class StockChild extends Component {
         })
     }
 
+    dropSearchChange = (event) => {
+        
+        const { value, name, parentElement } = event.target
+        const { id } = parentElement
+        let filter = value.toUpperCase()
+        let div = id
+        const { brands, styles, colors, sizes } = this.state.options
+
+        switch (name) {
+            case 'brand':
+
+                // for (let i = 0; i < brands.length; i++) {
+
+                //     let txtValue = brands[i].brandName
+                //     if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                //         brands[i]
+                //     }
+                // }
+
+                brands.forEach(brand => {
+                    // console.log(brand)
+                    // if (id === brand.value.id) {
+                    //     options.styles = []
+                    //     options.colors = []
+                    //     options.sizes = []
+                    //     API.getStyles(id)
+                    //         .then(res => {
+                    //             console.log(res.data)
+                    //             res.data.forEach(style => {
+                    //                 options.styles.push(
+                    //                     {
+                    //                         label: style.styleNum,
+                    //                         value: {
+                    //                             name: 'style',
+                    //                             id: style.id
+                    //                         }
+                    //                     }
+                    //                 )
+                    //             })
+                    //             this.setState({
+                    //                 brand: brand,
+                    //                 style: '',
+                    //                 color: '',
+                    //                 size: '',
+                    //                 warehouses: [
+                    //                     { qty: '', WarehouseId: 1 },
+                    //                     { qty: '', WarehouseId: 2 },
+                    //                     { qty: '', WarehouseId: 3 },
+                    //                     { qty: '', WarehouseId: 4 },
+                    //                 ],
+                    //                 options: options
+                    //             })
+                    //         })
+                    //         .catch(err => {
+                    //             console.log(err)
+                    //         })
+                    // }
+                })
+                break;
+            case 'style':
+                // options.styles.forEach(style => {
+                //     if (id === style.value.id) {
+                //         console.log(style.value.id)
+                //         options.colors = []
+                //         options.sizes = []
+                //         API.getColors(id)
+                //             .then(res => {
+                //                 console.log(res.data)
+                //                 res.data.forEach(color => {
+                //                     options.colors.push(
+                //                         {
+                //                             label: color.color,
+                //                             value: {
+                //                                 name: 'color',
+                //                                 id: color.id
+                //                             }
+                //                         }
+                //                     )
+                //                 })
+                //                 this.setState({
+                //                     style: style,
+                //                     color: '',
+                //                     size: '',
+                //                     warehouses: [
+                //                         { qty: '', WarehouseId: 1 },
+                //                         { qty: '', WarehouseId: 2 },
+                //                         { qty: '', WarehouseId: 3 },
+                //                         { qty: '', WarehouseId: 4 },
+                //                     ],
+                //                     options: options
+                //                 })
+                //             })
+                //             .catch(err => {
+                //                 console.log(err)
+                //             })
+                //     }
+                // })
+                break;
+            case 'color':
+                // options.colors.forEach(color => {
+                //     if (id === color.value.id) {
+                //         console.log(color.value.id)
+                //         options.sizes = []
+                //         API.getSizes(id)
+                //             .then(res => {
+                //                 console.log(res.data)
+                //                 res.data.forEach(size => {
+                //                     options.sizes.push(
+                //                         {
+                //                             label: size.size,
+                //                             value: {
+                //                                 name: 'size',
+                //                                 id: size.id
+                //                             }
+                //                         }
+                //                     )
+                //                 })
+                //                 this.setState({
+                //                     color: color,
+                //                     size: '',
+                //                     warehouses: [
+                //                         { qty: '', WarehouseId: 1 },
+                //                         { qty: '', WarehouseId: 2 },
+                //                         { qty: '', WarehouseId: 3 },
+                //                         { qty: '', WarehouseId: 4 },
+                //                     ],
+                //                     options: options
+                //                 })
+                //             })
+                //             .catch(err => {
+                //                 console.log(err)
+                //             })
+                //     }
+                // })
+                break;
+            default:
+                // options.sizes.forEach(size => {
+                //     if (id === size.value.id) {
+                //         console.log(size.value.id)
+                //         this.setState({
+                //             size: size,
+                //             warehouses: [
+                //                 { qty: '', WarehouseId: 1 },
+                //                 { qty: '', WarehouseId: 2 },
+                //                 { qty: '', WarehouseId: 3 },
+                //                 { qty: '', WarehouseId: 4 },
+                //             ]
+                //         })
+                //     }
+                // })
+                break;
+        }
+
+
+        // if ( value === 'string') {
+        //     console.log(value)
+        // }
+    }
+
 
     render() {
         return (
@@ -255,12 +415,19 @@ class StockChild extends Component {
                             <div className="row">
                                 <div className='col-sm'>
                                     <FormGroup>
-                                        <Dropdown
+                                        <DropSearch
+                                            name={'brand'}
+                                            options={this.state.options.brands}
+                                            inputChange={this.dropSearchChange}
+                                            value={this.state.brand.brandName}
+                                            placeholder="Search Brand"
+                                        />
+                                        {/* <Dropdown
                                             options={this.state.options.brands}
                                             onChange={this.dropdownChange}
                                             value={this.state.brand.brandName}
                                             placeholder="Select Brand"
-                                        />
+                                        /> */}
                                     </FormGroup>
                                 </div>
                                 <div className='col-sm'>

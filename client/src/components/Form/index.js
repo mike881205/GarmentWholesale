@@ -3,8 +3,8 @@ import "./style.css";
 
 // This file exports the Input, TextArea, and FormBtn components
 
-export function Input({ type, classes, placeholder, ...other }) {
-  return <input type={type} className={"form-control " + (classes ? classes : "")} placeholder={placeholder}
+export function Input({ type, classes, placeholder, id, ...other }) {
+  return <input type={type} className={"form-control " + (classes ? classes : "")} id={id} placeholder={placeholder}
   {...other} />;
 }
 
