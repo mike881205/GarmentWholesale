@@ -62,12 +62,15 @@ router.post("/api/createStock", (req, res) => {
 });
 
 router.put("/api/addStock", (req, res) => {
+  console.log("===========================")
+  console.log(req.query)
+  console.log("===========================")
   db.Stock.update(
-    { qty: req.body.qty },
+    { qty: req.query.qty },
     {
       where: {
-        SizeId: req.body.product,
-        WarehouseId: req.body.warehouse
+        SizeId: req.query.SizeId,
+        WarehouseId: req.query.WarehouseId
       }
     }
   ).then(info => {
@@ -80,10 +83,7 @@ router.put("/api/addStock", (req, res) => {
 
 router.get("/api/getStock", (req, res) => {
   db.Stock.findAll({
-    // where: {
-    //   WarehouseId: ''
-    // }
-    // include: { all: true, nested: true}
+
   })
     .then(dbResults => res.json(dbResults))
     .catch(err => {

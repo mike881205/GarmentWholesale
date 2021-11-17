@@ -37,18 +37,18 @@ class AdminJumbo extends Component {
         productList[index] = obj
 
         productList.forEach(product => {
-            if (product.complete){
+            if (product.complete) {
                 count++
             }
         })
 
         if (count === productList.length) {
-            this.setState({ submitDisable: false})
+            this.setState({ submitDisable: false })
         }
         else {
-            this.setState({ submitDisable: true})
+            this.setState({ submitDisable: true })
         }
-        
+
         this.setState({ productList: productList })
     }
 
@@ -127,24 +127,24 @@ class AdminJumbo extends Component {
 
         productList.forEach((product, i) => {
             product.warehouses.forEach((warehouse, j) => {
-                API.searchStock(product.size, warehouse.WarehouseId)
+                API.searchStock(product.size.value.id, warehouse.WarehouseId)
                     .then(res => {
                         let DBinfo = {
-                            product: product.size,
+                            product: product.size.value.id,
                             warehouse: warehouse.WarehouseId,
                             qty: res.data[0].qty + warehouse.qty
                         }
                         // Add Stock
-                        API.addStock(DBinfo)
+                        API.addStock(DBinfo.product, DBinfo.warehouse, DBinfo.qty)
                             .then(res => {
-                                console.log(res)
-                                API.searchStock(DBinfo.product, DBinfo.warehouse)
-                                    .then(res => {
-                                        console.log(res.data)
-                                    })
-                                    .catch(err => {
-                                        console.log(err)
-                                    })
+                                console.log(res.data)
+                                // API.searchStock(DBinfo.product, DBinfo.warehouse)
+                                //     .then(res => {
+                                //         console.log(res.data)
+                                //     })
+                                //     .catch(err => {
+                                //         console.log(err)
+                                //     })
                             })
                             .catch(err => {
                                 console.log(err)
@@ -490,11 +490,16 @@ class AdminJumbo extends Component {
                     </div>
                 </div>
 
-                <form>
+                <form style={{
+                    'height': '50vh',
+                    'overflowY': 'auto',
+                    'borderStyle': 'solid',
+                    'padding': '2%'
+                }}>
                     {this.state.formChildren}
                 </form>
 
-                <div className="row">
+                <div className="row" style={{ 'marginTop': '1%' }}>
                     <div className="col-sm">
                         <FormBtn
                             style={{ 'width': '25%' }}

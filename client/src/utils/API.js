@@ -20,6 +20,7 @@ export default {
     return axios.post("/api/createStock", SizeId, WarehouseId, qty);
   },
   addStock: (SizeId, WarehouseId, qty) => {
+    console.log(SizeId, WarehouseId, qty)
     return axios.put("/api/addStock/?SizeId=" + SizeId + "&WarehouseId=" + WarehouseId + "&qty=" + qty);
   },
   getStock: () => {

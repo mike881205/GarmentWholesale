@@ -250,7 +250,7 @@ class StockChild extends Component {
         return (
             this.state.loaded ?
                 <div>
-                    <div className="row" id={this.props.id}>
+                    <div className="row" id={this.props.id} style={{ 'width': '100%' }}>
                         <div className="col-sm">
                             <div className="row">
                                 <div className='col-sm'>
