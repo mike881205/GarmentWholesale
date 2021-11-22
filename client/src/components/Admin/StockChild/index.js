@@ -4,6 +4,7 @@ import Dropdown from 'react-dropdown';
 import 'react-dropdown/style.css';
 import API from "../../../utils/API";
 import DropSearch from "../../DropSearch";
+import OptionChild from "../../DropSearch/OptionChild";
 
 class StockChild extends Component {
 
@@ -19,169 +20,32 @@ class StockChild extends Component {
             { qty: 0, WarehouseId: 4 },
         ],
         options: {
-            brands: [],
-            styles: [],
-            colors: [],
-            sizes: []
+            brands: {
+                info: [],
+                optionChildren: [],
+                input: ''
+            },
+            styles: {
+                info: [],
+                optionChildren: [],
+                input: ''
+            },
+            colors: {
+                info: [],
+                optionChildren: [],
+                input: ''
+            },
+            sizes: {
+                info: [],
+                optionChildren: [],
+                input: ''
+            }
         },
         complete: false,
         loaded: false
     }
 
-    dropdownChange = event => {
-        const { value } = event;
-        const { name, id } = value
-
-        let prodObj = this.props.productList[this.props.index]
-
-        let options = {
-            brands: this.state.options.brands,
-            styles: this.state.options.styles,
-            colors: this.state.options.colors,
-            sizes: this.state.options.sizes
-        }
-
-        switch (name) {
-            case 'brand':
-                options.brands.forEach(brand => {
-                    if (id === brand.value.id) {
-                        options.styles = []
-                        options.colors = []
-                        options.sizes = []
-                        API.getStyles(id)
-                            .then(res => {
-                                console.log(res.data)
-                                res.data.forEach(style => {
-                                    options.styles.push(
-                                        {
-                                            label: style.styleNum,
-                                            value: {
-                                                name: 'style',
-                                                id: style.id
-                                            }
-                                        }
-                                    )
-                                })
-                                this.setState({
-                                    brand: brand,
-                                    style: '',
-                                    color: '',
-                                    size: '',
-                                    warehouses: [
-                                        { qty: '', WarehouseId: 1 },
-                                        { qty: '', WarehouseId: 2 },
-                                        { qty: '', WarehouseId: 3 },
-                                        { qty: '', WarehouseId: 4 },
-                                    ],
-                                    options: options
-                                })
-                            })
-                            .catch(err => {
-                                console.log(err)
-                            })
-                    }
-                })
-                break;
-            case 'style':
-                options.styles.forEach(style => {
-                    if (id === style.value.id) {
-                        console.log(style.value.id)
-                        options.colors = []
-                        options.sizes = []
-                        API.getColors(id)
-                            .then(res => {
-                                console.log(res.data)
-                                res.data.forEach(color => {
-                                    options.colors.push(
-                                        {
-                                            label: color.color,
-                                            value: {
-                                                name: 'color',
-                                                id: color.id
-                                            }
-                                        }
-                                    )
-                                })
-                                this.setState({
-                                    style: style,
-                                    color: '',
-                                    size: '',
-                                    warehouses: [
-                                        { qty: '', WarehouseId: 1 },
-                                        { qty: '', WarehouseId: 2 },
-                                        { qty: '', WarehouseId: 3 },
-                                        { qty: '', WarehouseId: 4 },
-                                    ],
-                                    options: options
-                                })
-                            })
-                            .catch(err => {
-                                console.log(err)
-                            })
-                    }
-                })
-                break;
-            case 'color':
-                options.colors.forEach(color => {
-                    if (id === color.value.id) {
-                        console.log(color.value.id)
-                        options.sizes = []
-                        API.getSizes(id)
-                            .then(res => {
-                                console.log(res.data)
-                                res.data.forEach(size => {
-                                    options.sizes.push(
-                                        {
-                                            label: size.size,
-                                            value: {
-                                                name: 'size',
-                                                id: size.id
-                                            }
-                                        }
-                                    )
-                                })
-                                this.setState({
-                                    color: color,
-                                    size: '',
-                                    warehouses: [
-                                        { qty: '', WarehouseId: 1 },
-                                        { qty: '', WarehouseId: 2 },
-                                        { qty: '', WarehouseId: 3 },
-                                        { qty: '', WarehouseId: 4 },
-                                    ],
-                                    options: options
-                                })
-                            })
-                            .catch(err => {
-                                console.log(err)
-                            })
-                    }
-                })
-                break;
-            default:
-                options.sizes.forEach(size => {
-                    if (id === size.value.id) {
-                        console.log(size.value.id)
-                        this.setState({
-                            size: size,
-                            warehouses: [
-                                { qty: '', WarehouseId: 1 },
-                                { qty: '', WarehouseId: 2 },
-                                { qty: '', WarehouseId: 3 },
-                                { qty: '', WarehouseId: 4 },
-                            ]
-                        })
-                    }
-                })
-                break;
-        }
-
-        prodObj.complete = false
-
-        this.props.updateProductList(prodObj, this.props.index)
-    }
-
-    handleInputChange = event => {
+    WHinputChange = event => {
         console.log(this.state.size)
         const reg = /^\d+$/;
         const { name, value } = event.target;
@@ -227,27 +91,244 @@ class StockChild extends Component {
         });
     };
 
+    handleDropSelect = event => {
+
+        this.handleInputChange(event)
+
+        let prodObj = this.props.productList[this.props.index]
+        let options = this.state.options
+        const { text, id, name } = event.target
+        console.log(event.target)
+
+        switch (name) {
+            case 'brands':
+                options.brands.info.forEach(brand => {
+                    if (parseInt(id) === brand.value.id) {
+                        options.styles.info = []
+                        options.styles.optionChildren = []
+                        options.styles.input = ''
+                        options.colors.info = []
+                        options.colors.optionChildren = []
+                        options.colors.input = ''
+                        options.sizes.info = []
+                        options.sizes.optionChildren = []
+                        options.sizes.input = ''
+                        API.getStyles(id)
+                            .then(res => {
+                                console.log(res.data)
+                                res.data.forEach((style, i) => {
+                                    options.styles.info.push(
+                                        {
+                                            label: style.styleNum,
+                                            value: {
+                                                name: 'style',
+                                                id: style.id
+                                            }
+                                        }
+                                    )
+                                    options.styles.optionChildren.push(
+                                        <OptionChild
+                                            key={i + 'styles'}
+                                            id={style.id}
+                                            name={'styles'}
+                                            text={style.styleNum}
+                                            handleInputChange={this.handleInputChange}
+                                            handleDropSelect={this.handleDropSelect}
+                                        />
+                                    )
+                                })
+                                this.setState({
+                                    brand: brand,
+                                    style: '',
+                                    color: '',
+                                    size: '',
+                                    warehouses: [
+                                        { qty: '', WarehouseId: 1 },
+                                        { qty: '', WarehouseId: 2 },
+                                        { qty: '', WarehouseId: 3 },
+                                        { qty: '', WarehouseId: 4 },
+                                    ],
+                                    options: options
+                                })
+                            })
+                            .catch(err => {
+                                console.log(err)
+                            })
+                    }
+                })
+                break;
+            // case 'styles':
+            //     options.styles.forEach(style => {
+            //         if (id === style.value.id) {
+            //             console.log(style.value.id)
+            //             options.colors = []
+            //             options.sizes = []
+            //             API.getColors(id)
+            //                 .then(res => {
+            //                     console.log(res.data)
+            //                     res.data.forEach(color => {
+            //                         options.colors.push(
+            //                             {
+            //                                 label: color.color,
+            //                                 value: {
+            //                                     name: 'color',
+            //                                     id: color.id
+            //                                 }
+            //                             }
+            //                         )
+            //                     })
+            //                     this.setState({
+            //                         style: style,
+            //                         color: '',
+            //                         size: '',
+            //                         warehouses: [
+            //                             { qty: '', WarehouseId: 1 },
+            //                             { qty: '', WarehouseId: 2 },
+            //                             { qty: '', WarehouseId: 3 },
+            //                             { qty: '', WarehouseId: 4 },
+            //                         ],
+            //                         options: options
+            //                     })
+            //                 })
+            //                 .catch(err => {
+            //                     console.log(err)
+            //                 })
+            //         }
+            //     })
+            //     break;
+            // case 'colors':
+            //     options.colors.forEach(color => {
+            //         if (id === color.value.id) {
+            //             console.log(color.value.id)
+            //             options.sizes = []
+            //             API.getSizes(id)
+            //                 .then(res => {
+            //                     console.log(res.data)
+            //                     res.data.forEach(size => {
+            //                         options.sizes.push(
+            //                             {
+            //                                 label: size.size,
+            //                                 value: {
+            //                                     name: 'size',
+            //                                     id: size.id
+            //                                 }
+            //                             }
+            //                         )
+            //                     })
+            //                     this.setState({
+            //                         color: color,
+            //                         size: '',
+            //                         warehouses: [
+            //                             { qty: '', WarehouseId: 1 },
+            //                             { qty: '', WarehouseId: 2 },
+            //                             { qty: '', WarehouseId: 3 },
+            //                             { qty: '', WarehouseId: 4 },
+            //                         ],
+            //                         options: options
+            //                     })
+            //                 })
+            //                 .catch(err => {
+            //                     console.log(err)
+            //                 })
+            //         }
+            //     })
+            //     break;
+            // default:
+            //     options.sizes.forEach(size => {
+            //         if (id === size.value.id) {
+            //             console.log(size.value.id)
+            //             this.setState({
+            //                 size: size,
+            //                 warehouses: [
+            //                     { qty: '', WarehouseId: 1 },
+            //                     { qty: '', WarehouseId: 2 },
+            //                     { qty: '', WarehouseId: 3 },
+            //                     { qty: '', WarehouseId: 4 },
+            //                 ]
+            //             })
+            //         }
+            //     })
+            //     break;
+        }
+
+        // prodObj.complete = false
+
+        // this.props.updateProductList(prodObj, this.props.index)
+    }
+
+    handleInputChange = event => {
+        const { id, name } = event.target
+        let options = this.state.options
+        const info = options[name].info
+        let newOptions = []
+        let filterVal;
+
+        if (event.target.value) {
+            filterVal = event.target.value.toUpperCase()
+            options[name].input = event.target.value.trim()
+        }
+        else if (event.target.text) {
+            filterVal = event.target.text.toUpperCase()
+            options[name].input = event.target.text.trim()
+        }
+        else {
+            filterVal = ''
+            options[name].input = ''
+        }
+
+        info.forEach((option, i) => {
+            const filterOption = option.label.toUpperCase()
+            if (filterOption.includes(filterVal)) {
+                newOptions.push(
+                    <OptionChild
+                        key={i + name}
+                        id={option.value.id}
+                        name={name}
+                        text={option.label}
+                        handleDropSelect={this.handleDropSelect}
+                    />
+                )
+            }
+        })
+        options[name].optionChildren = newOptions
+
+        this.setState({ options: options })
+    };
+
     componentDidMount() {
         let options = this.state.options
+
+        const { brands } = options
+
         this.props.brands.forEach((brand, i) => {
-            options.brands.push(
+            brands.info.push(
                 {
                     label: brand.brandName,
                     value: {
-                        name: 'brand',
+                        name: 'brands',
                         id: brand.id
                     }
                 }
             )
         });
+
+        brands.info.forEach((brand, i) => {
+            brands.optionChildren.push(
+                <OptionChild
+                    key={i + 'brand'}
+                    id={brand.value.id}
+                    name={brand.value.name}
+                    text={brand.label}
+                    handleDropSelect={this.handleDropSelect}
+                />
+            )
+        });
+
         this.setState({
             options: options,
             loaded: true
         })
     }
-
-    
-
 
     render() {
         return (
@@ -259,25 +340,20 @@ class StockChild extends Component {
                                 <div className='col-sm'>
                                     <FormGroup>
                                         <DropSearch
-                                            name={'brand'}
+                                            name={'brands'}
                                             options={this.state.options.brands}
-                                            inputChange={this.dropSearchChange}
-                                            value={this.state.brand.brandName}
+                                            value={this.state.options.brands.input}
+                                            handleDropSelect={this.handleDropSelect}
+                                            handleInputChange={this.handleInputChange}
                                             placeholder="Search Brand"
                                         />
-                                        {/* <Dropdown
-                                            options={this.state.options.brands}
-                                            onChange={this.dropdownChange}
-                                            value={this.state.brand.brandName}
-                                            placeholder="Select Brand"
-                                        /> */}
                                     </FormGroup>
                                 </div>
                                 <div className='col-sm'>
                                     <FormGroup>
                                         <Dropdown
-                                            options={this.state.options.styles ? this.state.options.styles : []}
-                                            onChange={this.dropdownChange}
+                                            options={this.state.options.styles.optionChildren ? this.state.options.styles.optionChildren : []}
+                                            onChange={this.handleDropSelect}
                                             value={this.state.style.label}
                                             disabled={!this.state.brand ? true : false}
                                             placeholder="Select Style"
@@ -288,7 +364,7 @@ class StockChild extends Component {
                                     <FormGroup>
                                         <Dropdown
                                             options={this.state.options.colors ? this.state.options.colors : []}
-                                            onChange={this.dropdownChange}
+                                            onChange={this.handleDropSelect}
                                             value={this.state.color.label}
                                             disabled={!this.state.style ? true : false}
                                             placeholder="Select Color"
@@ -299,7 +375,7 @@ class StockChild extends Component {
                                     <FormGroup>
                                         <Dropdown
                                             options={this.state.options.sizes ? this.state.options.sizes : []}
-                                            onChange={this.dropdownChange}
+                                            onChange={this.handleDropSelect}
                                             value={this.state.size.label}
                                             disabled={!this.state.color ? true : false}
                                             placeholder="Select Size"
@@ -315,7 +391,7 @@ class StockChild extends Component {
                                             // style={{ 'width': '25%' }}
                                             name={0}
                                             value={this.state.warehouses[0].qty}
-                                            onChange={this.handleInputChange}
+                                            onChange={this.WHinputChange}
                                             placeholder={'Enter Stock Qty'}
                                             type="number"
                                             disabled={!this.state.size ? true : false}
@@ -329,7 +405,7 @@ class StockChild extends Component {
                                             // style={{ 'width': '25%' }}
                                             name={1}
                                             value={this.state.warehouses[1].qty}
-                                            onChange={this.handleInputChange}
+                                            onChange={this.WHinputChange}
                                             placeholder={'Enter Stock Qty'}
                                             type="text"
                                             disabled={!this.state.size ? true : false}
@@ -343,7 +419,7 @@ class StockChild extends Component {
                                             // style={{ 'width': '25%' }}
                                             name={2}
                                             value={this.state.warehouses[2].qty}
-                                            onChange={this.handleInputChange}
+                                            onChange={this.WHinputChange}
                                             placeholder={'Enter Stock Qty'}
                                             type="text"
                                             disabled={!this.state.size ? true : false}
@@ -357,7 +433,7 @@ class StockChild extends Component {
                                             // style={{ 'width': '25%' }}
                                             name={3}
                                             value={this.state.warehouses[3].qty}
-                                            onChange={this.handleInputChange}
+                                            onChange={this.WHinputChange}
                                             placeholder={'Enter Stock Qty'}
                                             type="text"
                                             disabled={!this.state.size ? true : false}
