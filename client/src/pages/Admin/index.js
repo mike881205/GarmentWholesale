@@ -26,7 +26,20 @@ class Admin extends Component {
     componentDidMount() {
         // ONLY USE THIS AFTER INITIAL DB SEEDS HAVE BEEN RUN
         // CreateStock.addStock()
-        console.log(this.props)
+        API.getWarehouses()
+            .then(res => {
+                this.setState({ warehouses: res.data })
+                API.getAllBrands()
+                    .then(res => {
+                        this.setState({ brands: res.data })
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    });
+            })
+            .catch(err => {
+                console.log(err);
+            });
     }
 
     render() {
@@ -97,8 +110,8 @@ class Admin extends Component {
                         addSize: this.state.addSize,
                         addStock: this.state.addStock
                     }}
-                    brands={this.props.brands}
-                    warehouses={this.props.warehouses}
+                    brands={this.state.brands}
+                    warehouses={this.state.warehouses}
                 />
             );
         }

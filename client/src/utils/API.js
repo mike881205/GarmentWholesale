@@ -32,16 +32,25 @@ export default {
   getWarehouses: () => {
     return axios.get("/api/getWarehouses");
   },
-  getBrands: () => {
-    return axios.get("/api/getBrands");
+  getAllBrands: () => {
+    return axios.get("/api/getAllBrands");
   },
-  getStyles: BrandId => {
-    return axios.get("/api/getStyles/?BrandId=" + BrandId);
+  getAllStyles: () => {
+    return axios.get("/api/getAllStyles");
   },
-  getColors: StyleId => {
-    return axios.get("/api/getColors/?StyleId=" + StyleId);
+  getAllColors: () => {
+    return axios.get("/api/getAllColors");
   },
-  getSizes: ColorId => {
-    return axios.get("/api/getSizes/?ColorId=" + ColorId);
+  getAllSizes: () => {
+    return axios.get("/api/getAllSizes");
+  },
+  getStylesById: BrandId => {
+    return axios.get("/api/getStylesById/?BrandId=" + BrandId);
+  },
+  getColorsById: StyleId => {
+    return axios.get("/api/getColorsById/?StyleId=" + StyleId);
+  },
+  getSizesById: ColorId => {
+    return axios.get("/api/getSizesById/?ColorId=" + ColorId);
   }
 };

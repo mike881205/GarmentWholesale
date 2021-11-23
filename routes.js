@@ -117,7 +117,7 @@ router.get("/api/getWarehouses", (req, res) => {
     });
 });
 
-router.get("/api/getBrands", (req, res) => {
+router.get("/api/getAllBrands", (req, res) => {
   db.Brand.findAll({
     // include: { all: true, nested: true}
   })
@@ -128,7 +128,40 @@ router.get("/api/getBrands", (req, res) => {
     });
 });
 
-router.get("/api/getStyles", (req, res) => {
+router.get("/api/getAllStyles", (req, res) => {
+  db.Style.findAll({
+    // include: { all: true, nested: true}
+  })
+    .then(dbResults => res.json(dbResults))
+    .catch(err => {
+      console.log(err);
+      res.json(err);
+    });
+});
+
+router.get("/api/getAllColors", (req, res) => {
+  db.Color.findAll({
+    // include: { all: true, nested: true}
+  })
+    .then(dbResults => res.json(dbResults))
+    .catch(err => {
+      console.log(err);
+      res.json(err);
+    });
+});
+
+router.get("/api/getAllSizes", (req, res) => {
+  db.Size.findAll({
+    // include: { all: true, nested: true}
+  })
+    .then(dbResults => res.json(dbResults))
+    .catch(err => {
+      console.log(err);
+      res.json(err);
+    });
+});
+
+router.get("/api/getStylesById", (req, res) => {
   db.Style.findAll({
     where: { BrandId: req.query.BrandId }
   })
@@ -139,7 +172,7 @@ router.get("/api/getStyles", (req, res) => {
     });
 });
 
-router.get("/api/getColors", (req, res) => {
+router.get("/api/getColorsById", (req, res) => {
   db.Color.findAll({
     where: { StyleId: req.query.StyleId },
   })
@@ -150,7 +183,7 @@ router.get("/api/getColors", (req, res) => {
     });
 });
 
-router.get("/api/getSizes", (req, res) => {
+router.get("/api/getSizesById", (req, res) => {
   db.Size.findAll({
     where: {
       ColorId: req.query.ColorId

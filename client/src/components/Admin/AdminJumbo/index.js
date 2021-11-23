@@ -110,16 +110,6 @@ class AdminJumbo extends Component {
         });
     };
 
-    dropdownChange = event => {
-        const { label, value } = event;
-        const { index, name } = value
-        let product = this.state.products[index]
-        console.log(product, name, label)
-        this.setState({
-            [product[name]]: label
-        });
-    }
-
     addStock = event => {
         event.preventDefault();
 

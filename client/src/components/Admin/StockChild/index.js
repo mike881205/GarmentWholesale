@@ -3,8 +3,8 @@ import { FormGroup, Input, Label, Small, FormBtn } from "../../Form";
 import Dropdown from 'react-dropdown';
 import 'react-dropdown/style.css';
 import API from "../../../utils/API";
-import DropSearch from "../../DropSearch";
-import OptionChild from "../../DropSearch/OptionChild";
+import DropSearch from "../DropSearch";
+import OptionChild from "../DropSearch/OptionChild";
 
 class StockChild extends Component {
 
@@ -93,171 +93,184 @@ class StockChild extends Component {
 
     handleDropSelect = event => {
 
-        this.handleInputChange(event)
-
         let prodObj = this.props.productList[this.props.index]
         let options = this.state.options
-        const { text, id, name } = event.target
-        console.log(event.target)
 
-        switch (name) {
-            case 'brands':
-                options.brands.info.forEach(brand => {
-                    if (parseInt(id) === brand.value.id) {
-                        options.styles.info = []
-                        options.styles.optionChildren = []
-                        options.styles.input = ''
-                        options.colors.info = []
-                        options.colors.optionChildren = []
-                        options.colors.input = ''
-                        options.sizes.info = []
-                        options.sizes.optionChildren = []
-                        options.sizes.input = ''
-                        API.getStyles(id)
-                            .then(res => {
-                                console.log(res.data)
-                                res.data.forEach((style, i) => {
-                                    options.styles.info.push(
-                                        {
-                                            label: style.styleNum,
-                                            value: {
-                                                name: 'style',
-                                                id: style.id
+        if (event.target) {
+            this.handleInputChange(event)
+            const { id, name } = event.target
+            switch (name) {
+                case 'brands':
+                    options.brands.info.forEach(brand => {
+                        if (parseInt(id) === brand.value.id) {
+                            options.styles.info = []
+                            options.styles.optionChildren = []
+                            options.styles.input = ''
+                            options.colors.info = []
+                            options.colors.optionChildren = []
+                            options.colors.input = ''
+                            options.sizes.info = []
+                            options.sizes.optionChildren = []
+                            options.sizes.input = ''
+                            API.getStylesById(id)
+                                .then(res => {
+                                    console.log(res.data)
+                                    res.data.forEach((style, i) => {
+                                        options.styles.info.push(
+                                            {
+                                                label: style.styleNum,
+                                                value: {
+                                                    name: 'styles',
+                                                    id: style.id
+                                                }
                                             }
-                                        }
-                                    )
-                                    options.styles.optionChildren.push(
-                                        <OptionChild
-                                            key={i + 'styles'}
-                                            id={style.id}
-                                            name={'styles'}
-                                            text={style.styleNum}
-                                            handleInputChange={this.handleInputChange}
-                                            handleDropSelect={this.handleDropSelect}
-                                        />
-                                    )
+                                        )
+                                        options.styles.optionChildren.push(
+                                            <OptionChild
+                                                key={i + 'styles'}
+                                                id={style.id}
+                                                name={'styles'}
+                                                text={style.styleNum}
+                                                handleInputChange={this.handleInputChange}
+                                                handleDropSelect={this.handleDropSelect}
+                                            />
+                                        )
+                                    })
+                                    this.setState({
+                                        brand: brand,
+                                        style: '',
+                                        color: '',
+                                        size: '',
+                                        warehouses: [
+                                            { qty: '', WarehouseId: 1 },
+                                            { qty: '', WarehouseId: 2 },
+                                            { qty: '', WarehouseId: 3 },
+                                            { qty: '', WarehouseId: 4 },
+                                        ],
+                                        options: options
+                                    })
                                 })
-                                this.setState({
-                                    brand: brand,
-                                    style: '',
-                                    color: '',
-                                    size: '',
-                                    warehouses: [
-                                        { qty: '', WarehouseId: 1 },
-                                        { qty: '', WarehouseId: 2 },
-                                        { qty: '', WarehouseId: 3 },
-                                        { qty: '', WarehouseId: 4 },
-                                    ],
-                                    options: options
+                                .catch(err => {
+                                    console.log(err)
                                 })
-                            })
-                            .catch(err => {
-                                console.log(err)
-                            })
-                    }
-                })
-                break;
-            // case 'styles':
-            //     options.styles.forEach(style => {
-            //         if (id === style.value.id) {
-            //             console.log(style.value.id)
-            //             options.colors = []
-            //             options.sizes = []
-            //             API.getColors(id)
-            //                 .then(res => {
-            //                     console.log(res.data)
-            //                     res.data.forEach(color => {
-            //                         options.colors.push(
-            //                             {
-            //                                 label: color.color,
-            //                                 value: {
-            //                                     name: 'color',
-            //                                     id: color.id
-            //                                 }
-            //                             }
-            //                         )
-            //                     })
-            //                     this.setState({
-            //                         style: style,
-            //                         color: '',
-            //                         size: '',
-            //                         warehouses: [
-            //                             { qty: '', WarehouseId: 1 },
-            //                             { qty: '', WarehouseId: 2 },
-            //                             { qty: '', WarehouseId: 3 },
-            //                             { qty: '', WarehouseId: 4 },
-            //                         ],
-            //                         options: options
-            //                     })
-            //                 })
-            //                 .catch(err => {
-            //                     console.log(err)
-            //                 })
-            //         }
-            //     })
-            //     break;
-            // case 'colors':
-            //     options.colors.forEach(color => {
-            //         if (id === color.value.id) {
-            //             console.log(color.value.id)
-            //             options.sizes = []
-            //             API.getSizes(id)
-            //                 .then(res => {
-            //                     console.log(res.data)
-            //                     res.data.forEach(size => {
-            //                         options.sizes.push(
-            //                             {
-            //                                 label: size.size,
-            //                                 value: {
-            //                                     name: 'size',
-            //                                     id: size.id
-            //                                 }
-            //                             }
-            //                         )
-            //                     })
-            //                     this.setState({
-            //                         color: color,
-            //                         size: '',
-            //                         warehouses: [
-            //                             { qty: '', WarehouseId: 1 },
-            //                             { qty: '', WarehouseId: 2 },
-            //                             { qty: '', WarehouseId: 3 },
-            //                             { qty: '', WarehouseId: 4 },
-            //                         ],
-            //                         options: options
-            //                     })
-            //                 })
-            //                 .catch(err => {
-            //                     console.log(err)
-            //                 })
-            //         }
-            //     })
-            //     break;
-            // default:
-            //     options.sizes.forEach(size => {
-            //         if (id === size.value.id) {
-            //             console.log(size.value.id)
-            //             this.setState({
-            //                 size: size,
-            //                 warehouses: [
-            //                     { qty: '', WarehouseId: 1 },
-            //                     { qty: '', WarehouseId: 2 },
-            //                     { qty: '', WarehouseId: 3 },
-            //                     { qty: '', WarehouseId: 4 },
-            //                 ]
-            //             })
-            //         }
-            //     })
-            //     break;
+                        }
+                    })
+                    break;
+                case 'styles':
+                    options.styles.info.forEach(style => {
+                        if (parseInt(id) === style.value.id) {
+                            options.colors.info = []
+                            options.colors.optionChildren = []
+                            options.colors.input = ''
+                            options.sizes.info = []
+                            options.sizes.optionChildren = []
+                            options.sizes.input = ''
+                            API.getColorsById(id)
+                                .then(res => {
+                                    console.log(res.data)
+                                    res.data.forEach((color, i) => {
+                                        options.colors.info.push(
+                                            {
+                                                label: color.color,
+                                                value: {
+                                                    name: 'colors',
+                                                    id: color.id
+                                                }
+                                            }
+                                        )
+                                        options.colors.optionChildren.push(
+                                            <OptionChild
+                                                key={i + 'colors'}
+                                                id={color.id}
+                                                name={'colors'}
+                                                text={color.color}
+                                                handleInputChange={this.handleInputChange}
+                                                handleDropSelect={this.handleDropSelect}
+                                            />
+                                        )
+                                    })
+                                    this.setState({
+                                        style: style,
+                                        color: '',
+                                        size: '',
+                                        warehouses: [
+                                            { qty: '', WarehouseId: 1 },
+                                            { qty: '', WarehouseId: 2 },
+                                            { qty: '', WarehouseId: 3 },
+                                            { qty: '', WarehouseId: 4 },
+                                        ],
+                                        options: options
+                                    })
+                                })
+                                .catch(err => {
+                                    console.log(err)
+                                })
+                        }
+                    })
+                    break;
+                default:
+                    options.colors.info.forEach(color => {
+                        if (parseInt(id) === color.value.id) {
+                            options.sizes.info = []
+                            options.sizes.optionChildren = []
+                            options.sizes.input = ''
+                            API.getSizesById(id)
+                                .then(res => {
+                                    console.log(res.data)
+                                    res.data.forEach((size, i) => {
+                                        options.sizes.info.push(
+                                            {
+                                                label: size.size,
+                                                value: {
+                                                    name: 'sizes',
+                                                    id: size.id
+                                                }
+                                            }
+                                        )
+                                    })
+                                    this.setState({
+                                        color: color,
+                                        size: '',
+                                        warehouses: [
+                                            { qty: '', WarehouseId: 1 },
+                                            { qty: '', WarehouseId: 2 },
+                                            { qty: '', WarehouseId: 3 },
+                                            { qty: '', WarehouseId: 4 },
+                                        ],
+                                        options: options
+                                    })
+                                })
+                                .catch(err => {
+                                    console.log(err)
+                                })
+                        }
+                    })
+                    break;
+            }
+        }
+        else {
+            options.sizes.info.forEach(size => {
+                if (event.value.id === size.value.id) {
+                    this.setState({
+                        size: size,
+                        warehouses: [
+                            { qty: '', WarehouseId: 1 },
+                            { qty: '', WarehouseId: 2 },
+                            { qty: '', WarehouseId: 3 },
+                            { qty: '', WarehouseId: 4 },
+                        ]
+                    })
+                }
+            })
         }
 
-        // prodObj.complete = false
+        prodObj.complete = false
 
-        // this.props.updateProductList(prodObj, this.props.index)
+        this.props.updateProductList(prodObj, this.props.index)
     }
 
     handleInputChange = event => {
-        const { id, name } = event.target
+        const { name } = event.target
         let options = this.state.options
         const info = options[name].info
         let newOptions = []
@@ -346,39 +359,45 @@ class StockChild extends Component {
                                             handleDropSelect={this.handleDropSelect}
                                             handleInputChange={this.handleInputChange}
                                             placeholder="Search Brand"
+                                            disabled={false}
                                         />
                                     </FormGroup>
                                 </div>
                                 <div className='col-sm'>
                                     <FormGroup>
-                                        <Dropdown
-                                            options={this.state.options.styles.optionChildren ? this.state.options.styles.optionChildren : []}
-                                            onChange={this.handleDropSelect}
-                                            value={this.state.style.label}
+                                        <DropSearch
+                                            name={'styles'}
+                                            options={this.state.options.styles}
+                                            value={this.state.options.styles.input}
+                                            handleDropSelect={this.handleDropSelect}
+                                            handleInputChange={this.handleInputChange}
+                                            placeholder="Search Style"
                                             disabled={!this.state.brand ? true : false}
-                                            placeholder="Select Style"
                                         />
                                     </FormGroup>
                                 </div>
                                 <div className='col-sm'>
                                     <FormGroup>
-                                        <Dropdown
-                                            options={this.state.options.colors ? this.state.options.colors : []}
-                                            onChange={this.handleDropSelect}
-                                            value={this.state.color.label}
+                                        <DropSearch
+                                            name={'colors'}
+                                            options={this.state.options.colors}
+                                            value={this.state.options.colors.input}
+                                            handleDropSelect={this.handleDropSelect}
+                                            handleInputChange={this.handleInputChange}
+                                            placeholder="Search Color"
                                             disabled={!this.state.style ? true : false}
-                                            placeholder="Select Color"
                                         />
                                     </FormGroup>
                                 </div>
                                 <div className='col-sm'>
                                     <FormGroup>
+                                        <Label text="Select Size" />
                                         <Dropdown
-                                            options={this.state.options.sizes ? this.state.options.sizes : []}
+                                            options={this.state.options.sizes.info}
                                             onChange={this.handleDropSelect}
                                             value={this.state.size.label}
                                             disabled={!this.state.color ? true : false}
-                                            placeholder="Select Size"
+                                            placeholder="Size"
                                         />
                                     </FormGroup>
                                 </div>
